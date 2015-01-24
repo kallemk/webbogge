@@ -1,0 +1,69 @@
+.main-box{
+	height: 400px;
+	width: 600px;
+	margin: 100px auto 0 auto;
+}
+
+.logo img{
+	height: 100%;
+	width: 120%;
+	margin-left: -35px;
+	vertical-align: middle;
+}
+
+.left-box{
+	width: 340px;
+	height: 400px;
+	background-color: b9bdc4;
+	clear: both;
+	float: left;
+	box-shadow: 0 0 5px 1px #787f8a;
+	border-radius: 3px;
+}
+
+.login{
+	width: 250px;
+	height: 115px;
+	background-color: b9bdc4;
+	margin: 0 auto 10px 10px;
+	float: right;
+	box-shadow: 0 0 5px 1px #787f8a;
+	border-radius: 3px;
+}
+
+.signup{
+	width: 250px;
+	height: 275px;
+	background-color: b9bdc4;
+	margin: 0 auto 0 10px;
+	float: right;
+	box-shadow: 0 0 5px 1px #787f8a;
+	border-radius: 3px;
+}
+
+.form-group input{
+	display: inline-block; 
+	width: 145px; 
+	margin-top: 5px;
+	margin-right: 5px;
+}
+
+.form-button {
+	margin-top: 10px;
+	margin-left: 5px;
+}
+
+label { 
+	display: inline-block; 
+	width: 90px;
+	margin-left: 5px;
+}
+h3{
+	text-align: center;
+	margin-bottom: 2px;
+	margin-top: 5px;
+}
+
+body{
+	background-color: 1a56bb;
+}
