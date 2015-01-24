@@ -31,6 +31,27 @@
 	border-radius: 3px;
 }
 
+.login{
+}
+
+.signup{
+}
+
+.form-group input{
+	display: inline-block; 
+	width: 150px; 
+	margin-top: 5px;
+}
+
+.form-button {
+	margin-top: 10px;
+}
+
+label { 
+	display: inline-block; 
+	width: 90px; 
+}
+
 body{
 	background-color: 1a56bb;
 }
