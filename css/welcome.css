@@ -5,6 +5,12 @@
 	margin: 100px auto 0 auto;
 }
 
+.logo img{
+	height: 100%;
+	width: 120%;
+	margin-left: -35px;
+}
+
 .left-box{
 	width: 340px;
 	height: 400px;
