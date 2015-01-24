@@ -1,26 +1,36 @@
 .main-box{
-	background-color: red;
 	height: 400px;
 	width: 600px;
 	margin: 100px auto 0 auto;
 }
 
+.logo img{
+	height: 100%;
+	width: 120%;
+	margin-left: -35px;
+	vertical-align: middle;
+}
+
 .left-box{
 	width: 340px;
 	height: 400px;
-	background-color: green;
+	background-color: b9bdc4;
 	clear: both;
 	float: left;
+	box-shadow: 0 0 5px 1px #787f8a;
+	border-radius: 3px;
 }
 
 .right-box{
 	width: 250px;
 	height: 400px;
-	background-color: yellow;
+	background-color: b9bdc4;
 	margin: 0 auto 0 10px;
 	float: right;
+	box-shadow: 0 0 5px 1px #787f8a;
+	border-radius: 3px;
 }
 
 body{
-	
+	background-color: 1a56bb;
 }
