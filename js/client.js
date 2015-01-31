@@ -1,6 +1,6 @@
 displayView = function(currentView){  
-    $('body').append(document.getElementById(currentView).text)
- 
+    //$('body').append(document.getElementById(currentView).text)
+    $('body').html(document.getElementById(currentView).text)
 }
  
 window.onload = function(){  
@@ -27,5 +27,20 @@ function signupValidation(){
 			city : document.getElementById("city").value,
 			country : document.getElementById("country").value
 		};
+		var message = serverstub.signUp(dataObject);
+		alert(message.message);
+		if(message.success = true){
+			signIn(dataObject.email, dataObject.password);
+		}
+	}
+}
+
+function signIn(email,password){
+	var message = serverstub.signIn(email, password);
+	if(message.success = true){
+		alert(message.message);
+		displayView("profileview");
+	}else{
+		alert(message.message);
 	}
 }
