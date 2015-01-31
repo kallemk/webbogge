@@ -4,9 +4,11 @@ displayView = function(currentView){
 }
  
 window.onload = function(){  
-    
-    displayView("welcomeview");
- 
+    if(loggedInUsers == null){
+    	displayView("welcomeview");
+    }else{
+    	displayView("profileview")
+    }
 }
 
 function signupValidation(){
@@ -43,6 +45,17 @@ function signIn(email,password){
 		displayView("profileview");
 	}else{
 		alert(message.message);
+	}
+}
+
+function signOut(){
+	var token = getToken();
+	var state = serverstub.signOut(token);
+	if(state.success = true){
+		alert(state.message);
+		displayView("welcomeview");
+	}else{
+		alert(state.message);
 	}
 }
 
