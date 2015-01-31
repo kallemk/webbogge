@@ -38,9 +38,18 @@ function signupValidation(){
 function signIn(email,password){
 	var message = serverstub.signIn(email, password);
 	if(message.success = true){
+		setToken(message.data);
 		alert(message.message);
 		displayView("profileview");
 	}else{
 		alert(message.message);
 	}
+}
+
+function getToken(){
+	return localStorage.getItem("myToken");
+}
+
+function setToken(token){
+	localStorage.setItem("myToken",token);
 }
