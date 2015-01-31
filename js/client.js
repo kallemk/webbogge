@@ -29,22 +29,22 @@ function signupValidation(){
 			city : document.getElementById("city").value,
 			country : document.getElementById("country").value
 		};
-		var message = serverstub.signUp(dataObject);
-		alert(message.message);
-		if(message.success = true){
+		var state = serverstub.signUp(dataObject);
+		alert(state.message);
+		if(state.success = true){
 			signIn(dataObject.email, dataObject.password);
 		}
 	}
 }
 
 function signIn(email,password){
-	var message = serverstub.signIn(email, password);
-	if(message.success = true){
-		setToken(message.data);
-		alert(message.message);
+	var state = serverstub.signIn(email, password);
+	if(state.success = true){
+		setToken(state.data);
+		alert(state.message);
 		displayView("profileview");
 	}else{
-		alert(message.message);
+		alert(state.message);
 	}
 }
 
