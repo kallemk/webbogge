@@ -2,12 +2,13 @@ displayView = function(currentView){
     //$('body').append(document.getElementById(currentView).text)
     $('body').html(document.getElementById(currentView).text)
 }
- 
-window.onload = function(){  
-    if(loggedInUsers == null){
+
+window.onload = function(){
+	var token = getToken();
+    if(token === null || token === 'undefined'){
     	displayView("welcomeview");
     }else{
-    	displayView("profileview")
+    	displayView("profileview");
     }
 }
 
@@ -37,14 +38,22 @@ function signupValidation(){
 	}
 }
 
+function loginValidation(){
+	var email = document.getElementById("email").value;
+	var pwd = document.getElementById("pwd").value;
+	signIn(email,pwd);
+}
+
 function signIn(email,password){
 	var state = serverstub.signIn(email, password);
 	if(state.success = true){
 		setToken(state.data);
 		alert(state.message);
-		displayView("profileview");
+		setToken(state.data);
+		window.onload();
 	}else{
 		alert(state.message);
+		window.onload();
 	}
 }
 
@@ -53,7 +62,8 @@ function signOut(){
 	var state = serverstub.signOut(token);
 	if(state.success = true){
 		alert(state.message);
-		displayView("welcomeview");
+		localStorage.removeItem('myToken');
+		window.onload();
 	}else{
 		alert(state.message);
 	}
