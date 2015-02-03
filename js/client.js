@@ -19,7 +19,7 @@ function signupValidation(){
 	if(pwd1!=pwd2){
 		window.alert("Both password fields must be the same");
 	}else if ((pwd1.length || pwd2.length) < x){
-		window.alert("The password must contain at least " + x + " characters.");
+		window.alert("The password must contain at least " + x + " characters");
 	}else{ //Should this really be here, maybe it should be moved to an own function. But I don't know how to call that yet. Kalle mar skit!
 		var dataObject = {
 			email : document.getElementById("signup-email").value,
@@ -38,7 +38,7 @@ function signupValidation(){
 	}
 }
 
-function loginValidation(){
+function loginForm(){
 	var email = document.getElementById("email").value;
 	var pwd = document.getElementById("pwd").value;
 	signIn(email,pwd);
@@ -75,4 +75,32 @@ function getToken(){
 
 function setToken(token){
 	localStorage.setItem("myToken",token);
+}
+
+function changePanel(active, firstInactive, secondInactive){
+	active.style.display = 'block';
+	firstInactive.style.display = 'none';
+	secondInactive.style.display = 'none';
+}
+
+function changePassword(){
+	x = 5;
+	var oldPassword = document.getElementById('old-pwd').value;
+	var newPassword = document.getElementById('new-pwd').value;
+	var newPassword2 = document.getElementById('new-pwd2').value;
+	var token = getToken();
+	if(newPassword!=newPassword2){
+		window.alert("Both new password fields must be the same");
+	}else if ((newPassword.length || newPassword2.length) < x){
+		window.alert("The  new password must contain at least " + x + " characters");
+	}else{
+		var state = serverstub.changePassword(token, oldPassword, newPassword);
+		if(state.success === true){
+			alert(state.message);
+		}else{
+		alert(state.message);
+		}
+	}
+	var pwdForm = document.getElementById('change-password');
+	pwdForm.reset();
 }

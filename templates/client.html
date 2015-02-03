@@ -16,7 +16,7 @@
 				<div class="right-box">
 					<div class="login">
 						<h3>Login here!</h3>
-						<form name="log-in" action="javascript:loginValidation()">
+						<form name="log-in" action="javascript:loginForm()">
 							<div class="form-group">
 								<label for="email">Email</label>
 								<input type="email" name="email" id="email" required>
@@ -70,21 +70,49 @@
 			</div>
 		</script>
 		<script type="text/view" id="profileview">
-			<p>This is the profile view</p>
 			<div class="main-box">
-				<div class="tabs">
-					<ul>
+				<div class="left-box">
+					<div class="panels">
+						<div id="home">
+						<p>Home</p>
+						</div>
+						<div id="browse">
+						<p>Browse</p>
+						</div>
+						<div id="account">
+						<p>Change Password</p>
+							<form name="change-password" action="javascript:changePassword()" id="change-password">
+								<div class="form-group">
+									<label for="old-pwd">Current Password</label>
+									<input type="password" name="old-pwd" id="old-pwd" required>
+								</div>
+								<div class="form-group">
+									<label for="new-pwd">New Password</label>
+									<input type="password" name="new-pwd" id="new-pwd" required>
+								</div>
+								<div class="form-group">
+									<label for="new-pwd2">New Password</label>
+									<input type="password" name="new-pwd2" id="new-pwd2" required>
+								</div>
+								<input type="submit" value="Change Pasword" class="form-button">
+							</form>
+							<button type="button" class="form-button" onclick="signOut()">Sign out</button>
+						</div>
+					</div>
+				</div>
+				<div class="tab-box">
+					<ul id="tablist">
 						<li>
-							<button type="button">Home</button>
+							<button type="button" class="form-button" id="home-button" onclick="changePanel(home, browse, account)">Home</button>
 						</li>
 						<li>
-							<button type="button">Browse</button>
+							<button type="button" class="form-button" id="browse-button" onclick="changePanel(browse, home, account)">Browse</button>
 						</li>
 						<li>
-							<button type="button">Account</button>
+							<button type="button" class="form-button" id="account-button" onclick="changePanel(account, browse, home)">Account</button>
 						</li>
 						<li>
-							<button type="button" onclick="signOut()">Sign out</button>
+							<button type="button" class="form-button" onclick="signOut()">Sign out</button>
 						</li>
 					</ul>
 				</div>
