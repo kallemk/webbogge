@@ -1,6 +1,9 @@
 displayView = function(currentView){  
     //$('body').append(document.getElementById(currentView).text)
-    $('body').html(document.getElementById(currentView).text)
+    $('body').html(document.getElementById(currentView).text);
+    if(currentView = "profileview"){
+    	showMyInformation();
+    }
 }
 
 window.onload = function(){
@@ -53,7 +56,8 @@ function signIn(email,password){
 		window.onload();
 	}else{
 		alert(state.message);
-		window.onload();
+		var loginForm = document.getElementById('log-in');
+		loginForm.reset();
 	}
 }
 
@@ -103,4 +107,14 @@ function changePassword(){
 	}
 	var pwdForm = document.getElementById('change-password');
 	pwdForm.reset();
+}
+
+function showMyInformation(){
+	var token = getToken();
+	var user = serverstub.getUserDataByToken(token);
+	$('#show-name').append(user.data.firstname + " " + user.data.familyname + "!");
+	$('#show-email').append(user.data.email);
+	$('#show-gender').append(user.data.gender);
+	$('#show-city').append(user.data.city);
+	$('#show-country').append(user.data.country);
 }

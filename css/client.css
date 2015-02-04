@@ -77,6 +77,28 @@ h3{
 	display: none;
 }
 
+ul#personal-info{
+	list-style: none;
+	float: right;
+}
+
+.form-group p{
+	display: inline-block; 
+	width: 145px; 
+	margin-top: 1px;
+	margin-right: 1px;
+	margin-bottom: 1px;
+}
+
+#personal-info label{
+	width: 60px;
+}
+
+p#show-name{
+	margin-bottom: 1px;
+	text-align: center;
+}
+
 .tab-box{
 	width: 250px;
 	height: 400px;

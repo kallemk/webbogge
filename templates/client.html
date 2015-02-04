@@ -16,7 +16,7 @@
 				<div class="right-box">
 					<div class="login">
 						<h3>Login here!</h3>
-						<form name="log-in" action="javascript:loginForm()">
+						<form name="log-in" id="log-in" action="javascript:loginForm()">
 							<div class="form-group">
 								<label for="email">Email</label>
 								<input type="email" name="email" id="email" required>
@@ -74,7 +74,23 @@
 				<div class="left-box">
 					<div class="panels">
 						<div id="home">
-						<p>Home</p>
+							<p id="show-name">Hi </p>
+							<div class="form-group" id="personal-info">
+								<label for="show-email" class="personal-info">Email:</label>
+								<p id="show-email"></p>
+							</div>
+							<div class="form-group" id="personal-info">
+								<label for="show-gender" class="personal-info">Gender:</label>
+								<p id="show-gender"></p>
+							</div>
+							<div class="form-group" id="personal-info">
+								<label for="show-city" class="personal-info">City:</label>
+								<p id="show-city"></p>
+							</div>
+							<div class="form-group" id="personal-info">
+								<label for="show-country" class="personal-info">Country:</label>
+								<p id="show-country"></p>
+							</div>
 						</div>
 						<div id="browse">
 						<p>Browse</p>
