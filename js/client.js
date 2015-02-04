@@ -104,3 +104,16 @@ function changePassword(){
 	var pwdForm = document.getElementById('change-password');
 	pwdForm.reset();
 }
+
+function viewUser(){
+	var token = getToken();
+	var userEmail = document.getElementById('user-email').value;
+	alert(token);
+	var userData = serverstub.getUserDataByEmail(token, userEmail);
+	var userMessages = serverstub.getUserMessagesByEmail(token, userEmail);
+	if((userEmail.success && userData.success) === true){
+		alert(userData.message);
+	}else{
+		alert(userData.message);
+	}	
+}

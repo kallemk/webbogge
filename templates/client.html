@@ -77,7 +77,19 @@
 						<p>Home</p>
 						</div>
 						<div id="browse">
-						<p>Browse</p>
+							<p>Browse</p>
+							<div id="browse-bar">
+								<form name="browse-form" id="browse-form">
+									<div class="form-group">
+										<label for="user-email">Search for user:</label>
+										<input type="email" name="user-email" id="user-email" required>
+									</div>
+									<input type="button" onclick="viewUser()" value="View user" class="form-button">
+								</form>
+							</div>
+							<div id="user-view">
+
+							</div>
 						</div>
 						<div id="account">
 						<p>Change Password</p>
