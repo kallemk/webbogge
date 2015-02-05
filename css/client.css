@@ -51,6 +51,7 @@
 .form-button {
 	margin-top: 10px;
 	margin-left: 5px;
+	margin-bottom: 2px;
 }
 
 label { 
@@ -84,7 +85,7 @@ ul#personal-info{
 
 .form-group p{
 	display: inline-block; 
-	width: 145px; 
+	width: 145px;
 	margin-top: 1px;
 	margin-right: 1px;
 	margin-bottom: 1px;
@@ -99,6 +100,26 @@ p#show-name{
 	text-align: center;
 }
 
+#post-to-wall p{
+	text-align: center;
+	margin-bottom: 2px;
+	margin-top: 5px;
+}
+
+#post-to-wall textarea{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	resize: none;
+}
+
+#message-wall textarea{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	resize: none;
+}
+
 .tab-box{
 	width: 250px;
 	height: 400px;
@@ -111,6 +132,7 @@ p#show-name{
 
 ul#tablist{
 	list-style: none;
+	display: inline-block;
 }
 
 body{

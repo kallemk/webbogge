@@ -91,9 +91,17 @@
 								<label for="show-country" class="personal-info">Country:</label>
 								<p id="show-country"></p>
 							</div>
+							<div id="post-to-wall">
+								<p>What is on your mind?</p>
+								<textarea rows="3" cols="30" id="to-my-wall"></textarea>
+								<input type="button" class="form-button" value="Post To Wall" onclick="getUserPost()">
+							</div>
+							<div id="message-wall">
+								<textarea rows="9" cols="30" id="my-wall" readonly></textarea>
+								<input type="button" class="form-button" value="Refresh" onclick="setWallContent()">
+							</div>
 						</div>
 						<div id="browse">
-							<p>Browse</p>
 							<div id="browse-bar">
 								<form name="browse-form" id="browse-form">
 									<div class="form-group">
@@ -103,23 +111,39 @@
 									<input type="button" onclick="viewUser()" value="View user" class="form-button">
 								</form>
 							</div>
-							<div id="user-view">
-
+							<div id="friend-info">
+								<p id="show-name2"></p>
+								<div class="form-group" id="personal-info2">
+									<label for="show-email2" class="personal-info">Email:</label>
+									<p id="show-email2"></p>
+								</div>
+								<div class="form-group" id="personal-info2">
+									<label for="show-gender2" class="personal-info">Gender:</label>
+									<p id="show-gender2"></p>
+								</div>
+								<div class="form-group" id="personal-info2">
+									<label for="show-city2" class="personal-info">City:</label>
+									<p id="show-city2"></p>
+								</div>
+								<div class="form-group" id="personal-info2">
+									<label for="show-country2" class="personal-info">Country:</label>
+									<p id="show-country2"></p>
+								</div>
 							</div>
 						</div>
 						<div id="account">
 						<p>Change Password</p>
 							<form name="change-password" action="javascript:changePassword()" id="change-password">
 								<div class="form-group">
-									<label for="old-pwd">Current Password</label>
+									<label for="old-pwd">Current pwd</label>
 									<input type="password" name="old-pwd" id="old-pwd" required>
 								</div>
 								<div class="form-group">
-									<label for="new-pwd">New Password</label>
+									<label for="new-pwd">New pwd</label>
 									<input type="password" name="new-pwd" id="new-pwd" required>
 								</div>
 								<div class="form-group">
-									<label for="new-pwd2">New Password</label>
+									<label for="new-pwd2">New Pwd</label>
 									<input type="password" name="new-pwd2" id="new-pwd2" required>
 								</div>
 								<input type="submit" value="Change Pasword" class="form-button">

@@ -1,8 +1,9 @@
 displayView = function(currentView){  
     //$('body').append(document.getElementById(currentView).text)
     $('body').html(document.getElementById(currentView).text);
-    if(currentView = "profileview"){
+    if(currentView === "profileview"){
     	showMyInformation();
+    	setWallContent();
     }
 }
 
@@ -35,7 +36,7 @@ function signupValidation(){
 		};
 		var state = serverstub.signUp(dataObject);
 		alert(state.message);
-		if(state.success = true){
+		if(state.success === true){
 			signIn(dataObject.email, dataObject.password);
 		}
 	}
@@ -49,22 +50,21 @@ function loginForm(){
 
 function signIn(email,password){
 	var state = serverstub.signIn(email, password);
-	if(state.success = true){
+	if(state.success === true){
 		setToken(state.data);
 		alert(state.message);
-		setToken(state.data);
 		window.onload();
 	}else{
 		alert(state.message);
-		var loginForm = document.getElementById('log-in');
-		loginForm.reset();
+		var signInForm = document.getElementById('log-in');
+		signInForm.reset();
 	}
 }
 
 function signOut(){
 	var token = getToken();
 	var state = serverstub.signOut(token);
-	if(state.success = true){
+	if(state.success === true){
 		alert(state.message);
 		localStorage.removeItem('myToken');
 		window.onload();
@@ -122,12 +122,52 @@ function showMyInformation(){
 function viewUser(){
 	var token = getToken();
 	var userEmail = document.getElementById('user-email').value;
-	alert(token);
 	var userData = serverstub.getUserDataByEmail(token, userEmail);
 	var userMessages = serverstub.getUserMessagesByEmail(token, userEmail);
-	if((userEmail.success && userData.success) === true){
+	if(userData.success === true){
 		alert(userData.message);
+		showFriendInfo(userData);
 	}else{
 		alert(userData.message);
 	}	
+}
+
+function showFriendInfo(user){
+	$('#show-name2').append("This is " + user.data.firstname + " " + user.data.familyname + "!");
+	$('#show-email2').append(user.data.email);
+	$('#show-gender2').append(user.data.gender);
+	$('#show-city2').append(user.data.city);
+	$('#show-country2').append(user.data.country);
+	document.getElementById('user-email').value = "";
+}
+
+function getUserPost(){
+	var token = getToken();
+	var postContent = document.getElementById('to-my-wall').value;
+	if(postContent === ""){
+		alert("Write something!");
+	}else{
+		var user = serverstub.getUserDataByToken(token);
+		var state = serverstub.postMessage(token, postContent, user.data.email);
+		newestPost(token, user);
+	}
+}
+
+function newestPost(token, user){
+	var messages = serverstub.getUserMessagesByEmail(token, user.data.email);
+	var currentValue = $('#my-wall').text();
+	var author = (user.data.firstname + " " + user.data.familyname + " says:" + "\n");
+	var newValue = (author + messages.data[0].content + "\n" + currentValue);
+	$('#my-wall').val(newValue);
+	document.getElementById('to-my-wall').value = "";
+}
+
+function setWallContent(){
+	var token = getToken();
+	var user = serverstub.getUserDataByToken(token);
+	var messages = serverstub.getUserMessagesByEmail(token, user.data.email);
+	for (i = 0; i < messages.data.length; i++) {
+		$('#my-wall').append(user.data.firstname + " " + user.data.familyname + " says:" + "\n");
+		$('#my-wall').append(messages.data[i].content + "\n");
+	}
 }
