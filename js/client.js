@@ -133,11 +133,11 @@ function viewUser(){
 }
 
 function showFriendInfo(user){
-	$('#show-name2').append("This is " + user.data.firstname + " " + user.data.familyname + "!");
-	$('#show-email2').append(user.data.email);
-	$('#show-gender2').append(user.data.gender);
-	$('#show-city2').append(user.data.city);
-	$('#show-country2').append(user.data.country);
+	$('#show-name2').replaceWith("This is " + user.data.firstname + " " + user.data.familyname + "!");
+	$('#show-email2').replaceWith(user.data.email);
+	$('#show-gender2').replaceWith(user.data.gender);
+	$('#show-city2').replaceWith(user.data.city);
+	$('#show-country2').replaceWith(user.data.country);
 	document.getElementById('user-email').value = "";
 }
 
