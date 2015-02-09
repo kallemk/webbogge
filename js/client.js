@@ -1,5 +1,4 @@
 displayView = function(currentView){  
-    //$('body').append(document.getElementById(currentView).text)
     $('body').html(document.getElementById(currentView).text);
     if(currentView === "profileview"){
     	showMyInformation();
@@ -9,6 +8,7 @@ displayView = function(currentView){
 
 window.onload = function(){
 	var token = getToken();
+	//Token is null/undefined when not logged in
     if(token === null || token === 'undefined'){
     	displayView("welcomeview");
     }else{
@@ -21,10 +21,10 @@ function signupValidation(){
 	var pwd1 = document.getElementById("signup-pwd").value;
 	var pwd2 = document.getElementById("signup-pwd2").value;
 	if(pwd1!=pwd2){
-		window.alert("Both password fields must be the same");
+		alert("Both password fields must be the same");
 	}else if ((pwd1.length || pwd2.length) < x){
-		window.alert("The password must contain at least " + x + " characters");
-	}else{ //Should this really be here, maybe it should be moved to an own function. But I don't know how to call that yet. Kalle mar skit!
+		alert("The password must contain at least " + x + " characters");
+	}else{
 		var dataObject = {
 			email : document.getElementById("signup-email").value,
 			password : document.getElementById("signup-pwd").value,
@@ -42,11 +42,13 @@ function signupValidation(){
 	}
 }
 
+/*Interprets the form fields fo further use in the sign in process*/
 function loginForm(){
 	var email = document.getElementById("email").value;
 	var pwd = document.getElementById("pwd").value;
 	signIn(email,pwd);
 }
+
 
 function signIn(email,password){
 	var state = serverstub.signIn(email, password);
@@ -73,29 +75,19 @@ function signOut(){
 	}
 }
 
-function getToken(){
-	return localStorage.getItem("myToken");
-}
 
-function setToken(token){
-	localStorage.setItem("myToken",token);
-}
-
-function getEmail(){
-	return localStorage.getItem("userEmail");
-}
-
-function setEmail(email){
-	localStorage.setItem("userEmail",email);
-}
-
+/*This function uses the input from the tab buttons to interpret
+which tab that is the one that should be shown. The function changes
+the style of the different div tags*/
 function changePanel(active, firstInactive, secondInactive){
 	active.style.display = 'block';
 	firstInactive.style.display = 'none';
 	secondInactive.style.display = 'none';
+	//Makes sure that the text fields in the browse tab are erased
 	if(firstInactive === browse || secondInactive === browse){
 		$("#friend-info p").empty();
 		$("#user-message-wall textarea").empty();
+		localStorage.removeItem("userEmail");
 	}
 }
 
@@ -106,21 +98,23 @@ function changePassword(){
 	var newPassword2 = document.getElementById('new-pwd2').value;
 	var token = getToken();
 	if(newPassword!=newPassword2){
-		window.alert("Both new password fields must be the same");
+		alert("Both new password fields must be the same");
 	}else if ((newPassword.length || newPassword2.length) < x){
-		window.alert("The  new password must contain at least " + x + " characters");
+		alert("The  new password must contain at least " + x + " characters");
 	}else{
 		var state = serverstub.changePassword(token, oldPassword, newPassword);
 		if(state.success === true){
 			alert(state.message);
 		}else{
-		alert(state.message);
+			alert(state.message);
 		}
 	}
+	//Erases the form content
 	var pwdForm = document.getElementById('change-password');
 	pwdForm.reset();
 }
 
+/*The function appends the logged in user's info on the home tab*/
 function showMyInformation(){
 	var token = getToken();
 	var user = serverstub.getUserDataByToken(token);
@@ -131,6 +125,8 @@ function showMyInformation(){
 	$('#show-country').append(user.data.country);
 }
 
+/*The function interprets what has been written in the search
+field and sets up the user page*/
 function viewUser(){
 	var token = getToken();
 	var userEmail = document.getElementById('user-email').value;
@@ -146,8 +142,12 @@ function viewUser(){
 	}	
 }
 
+/*The function appends the information for the user
+that has been searched for*/
 function showFriendInfo(user){
+	//Erases the content of the p tags in the div
 	$("#friend-info p").empty();
+
 	$('#show-name2').append("This is " + user.data.firstname + " " + user.data.familyname + "!");
 	$('#show-email2').append(user.data.email);
 	$('#show-gender2').append(user.data.gender);
@@ -156,6 +156,9 @@ function showFriendInfo(user){
 	document.getElementById('user-email').value = "";
 }
 
+/*The function interprets the information of the posting
+textarea and sends it to the function that appends the
+post content on the wall*/
 function getMyPost(){
 	var token = getToken();
 	var postContent = document.getElementById('to-my-wall').value;
@@ -169,11 +172,18 @@ function getMyPost(){
 	}
 }
 
+/*The function interprets the information of the posting
+textarea and sends it to the function that appends the
+post content on the wall*/
 function getUserPost(){
 	var token = getToken();
+	var email = getEmail();
 	var postContent = document.getElementById('to-user-wall').value;
 	if(postContent === ""){
 		alert("Write something!");
+	}else if(email === null || email === "undefined"){
+		alert("You need to choose a user!");
+		document.getElementById('to-user-wall').value = "";
 	}else{
 		var email = getEmail();
 		var user = serverstub.getUserDataByEmail(token, email);
@@ -182,6 +192,8 @@ function getUserPost(){
 	}
 }
 
+/*This function puts the most recent post on the signed in users
+wall or the searched users wall*/
 function newestPost(token, user, messageWall, postWall){
 	var messages = serverstub.getUserMessagesByEmail(token, user.data.email);
 	var currentValue = $(messageWall).text();
@@ -191,6 +203,7 @@ function newestPost(token, user, messageWall, postWall){
 	document.getElementById(postWall).value = "";
 }
 
+/*The function sets up the content of the logged in users wall*/
 function setWallContent(){
 	var token = getToken();
 	var user = serverstub.getUserDataByToken(token);
@@ -201,14 +214,39 @@ function setWallContent(){
 	}
 }
 
+/*The function sets up the content of the searched users wall*/
 function setUserWallContent(){
 	$("#user-message-wall textarea").empty();
 	var token = getToken();
 	var email = getEmail();
-	var user = serverstub.getUserDataByEmail(token, email);
-	var messages = serverstub.getUserMessagesByEmail(token, email);
-	for (i = 0; i < messages.data.length; i++) {
-		$('#user-wall').append(messages.data[i].writer + " says:" + "\n");
-		$('#user-wall').append(messages.data[i].content + "\n");
+	if(email === null || email === "undefined"){
+		alert("You need to choose a user!")
+	}else{
+		var user = serverstub.getUserDataByEmail(token, email);
+		var messages = serverstub.getUserMessagesByEmail(token, email);
+		for (i = 0; i < messages.data.length; i++) {
+			$('#user-wall').append(messages.data[i].writer + " says:" + "\n");
+			$('#user-wall').append(messages.data[i].content + "\n");
+		}
 	}
+}
+
+/*The functions below are used to make a quick call to
+authenticate users*/
+function getToken(){
+	return localStorage.getItem("myToken");
+}
+
+function setToken(token){
+	localStorage.setItem("myToken",token);
+}
+
+/*The functions below are used to make a quick call to
+know if there is an active search request on the browse tab*/
+function getEmail(){
+	return localStorage.getItem("userEmail");
+}
+
+function setEmail(email){
+	localStorage.setItem("userEmail",email);
 }

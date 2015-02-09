@@ -1,21 +1,8 @@
+/*styling below sets up the different boxes*/
 .main-box{
 	height: 400px;
 	width: 600px;
 	margin: 100px auto 0 auto;
-}
-
-.logo img{
-	height: 100%;
-	width: 120%;
-	margin-left: -35px;
-	vertical-align: middle;
-}
-
-#tab-box-logo img{
-	height: 220px;
-	width: 240px;
-	vertical-align: middle;
-	margin-left: 0px;
 }
 
 .left-box{
@@ -48,19 +35,50 @@
 	border-radius: 3px;
 }
 
-.form-group input{
-	display: inline-block; 
-	width: 145px; 
-	margin-top: 5px;
-	margin-right: 5px;
+.tab-box{
+	width: 250px;
+	height: 390px;
+	background-color: b9bdc4;
+	margin: 0 auto 0 10px;
+	float: right;
+	box-shadow: 0 0 5px 1px #787f8a;
+	border-radius: 3px;
+	padding-top: 10px;
+}
+/*End of box styling*/
+
+/*Menu button styling*/
+ul#tablist{
+	list-style: none;
+	display: inline;
+	width: 210px;
+	margin-left: 25px;
+	padding: 0;
 }
 
-input.form-button {
-	float: right;
-	margin-top: 5px;
-	margin-right: 40px;
-	margin-bottom: 5px;
-}	
+ul#tablist li{
+	display: inline;
+}
+/*End of menu button styling*/
+
+/*Logo styling in the different views*/
+.logo img{
+	height: 100%;
+	width: 120%;
+	margin-left: -35px;
+	vertical-align: middle;
+}
+
+#tab-box-logo img{
+	height: 220px;
+	width: 240px;
+	vertical-align: middle;
+	margin-left: 0px;
+}
+/*End of logo styling*/
+
+/*General styling of some tags*/
+body{background-color: 1a56bb;}
 
 label { 
 	display: inline-block; 
@@ -74,6 +92,23 @@ h3{
 	margin-top: 5px;
 }
 
+.form-group input{
+	display: inline-block; 
+	width: 145px; 
+	margin-top: 5px;
+	margin-right: 5px;
+}
+
+input.form-button {
+	float: right;
+	margin-top: 5px;
+	margin-right: 40px;
+	margin-bottom: 5px;
+}
+/*End of the general tag styling*/
+
+/*Styling to determine which tab that is active.
+Javascript is used to change the style of these elements*/
 #home{
 	display: block;
 }
@@ -85,7 +120,9 @@ h3{
 #account{
 	display: none;
 }
+/*Tab styling ends here*/
 
+/*Styling for the user information in home and browse*/
 ul#personal-info, ul#personal-info2{
 	list-style: none;
 	float: right;
@@ -99,14 +136,18 @@ ul#personal-info, ul#personal-info2{
 	margin-bottom: 1px;
 }
 
-form#browse-form{
+p#show-name, p#show-name2{
 	margin-bottom: 1px;
+	text-align: center;
+	margin-top: 5px;
 }
 
 label.personal-info{
 	width: 60px;
 }
+/*End of user information styling*/
 
+/*Search field styling in browse*/
 #search-field{
 	margin-top: 5px;
 }
@@ -120,19 +161,12 @@ input#view-user-button{
 	width: 90px;
 }
 
-p#show-name, p#show-name2{
+form#browse-form{
 	margin-bottom: 1px;
-	text-align: center;
 }
+/*End of search field styling*/
 
-p#show-name{
-	margin-top: 5px;
-}
-
-p#show-name2{
-	margin-top: 5px;
-}
-
+/*Styling of the walls in home and browse*/
 #post-to-wall p, #post-to-user-wall p{
 	text-align: center;
 	margin-bottom: 2px;
@@ -152,51 +186,21 @@ p#show-name2{
 	margin-right: auto;
 	resize: none;
 }
+/*End of wall styling*/
 
-.tab-box{
-	width: 250px;
-	height: 390px;
-	background-color: b9bdc4;
-	margin: 0 auto 0 10px;
-	float: right;
-	box-shadow: 0 0 5px 1px #787f8a;
-	border-radius: 3px;
-	padding-top: 10px;
-}
-
-ul#tablist{
-	list-style: none;
-	display: inline;
-	width: 210px;
-	margin-left: 25px;
-	padding: 0;
-}
-
-ul#tablist li{
-	display: inline;
-}
-
+/*Styling in the account tab*/
 #account p{
 	text-align: center;
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
 
-label.pwd-label{
-	width: 120px;
-}
+label.pwd-label{width: 120px;}
 
-input#change-pwd-button{
-	margin-right: 67px;
-}
+input#change-pwd-button{margin-right: 67px;}
 
 button#sign-out-button{
 	margin-top: 20px;
 	margin-left: 5px;
 }
-
-
-
-body{
-	background-color: 1a56bb;
-}
+/*End of account tab styling*/
