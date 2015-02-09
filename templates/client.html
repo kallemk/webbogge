@@ -93,8 +93,8 @@
 							</div>
 							<div id="post-to-wall">
 								<p>What is on your mind?</p>
-								<textarea rows="3" cols="30" id="to-my-wall"></textarea>
-								<input type="button" class="form-button" value="Post To Wall" onclick="getUserPost()">
+								<textarea rows="2" cols="30" id="to-my-wall"></textarea>
+								<input type="button" class="form-button" value="Post To Wall" onclick="getMyPost()">
 							</div>
 							<div id="message-wall">
 								<textarea rows="9" cols="30" id="my-wall" readonly></textarea>
@@ -104,11 +104,11 @@
 						<div id="browse">
 							<div id="browse-bar">
 								<form name="browse-form" id="browse-form">
-									<div class="form-group">
-										<label for="user-email">Search for user:</label>
+									<div class="form-group" id="search-field">
+										<label for="user-email" id="search-label">Find user:</label>
 										<input type="email" name="user-email" id="user-email" required>
+										<input type="button" onclick="viewUser()" value="View user" class="form-button" id="view-user-button">
 									</div>
-									<input type="button" onclick="viewUser()" value="View user" class="form-button">
 								</form>
 							</div>
 							<div id="friend-info">
@@ -130,46 +130,52 @@
 									<p id="show-country2"></p>
 								</div>
 							</div>
+							<div id="post-to-user-wall">
+								<p>Write on the user wall:</p>
+								<textarea rows="2" cols="30" id="to-user-wall"></textarea>
+								<input type="button" class="form-button" value="Post To Wall" onclick="getUserPost()">
+							</div>
+							<div id="user-message-wall">
+								<textarea rows="9" cols="30" id="user-wall" readonly></textarea>
+								<input type="button" class="form-button" value="Refresh" onclick="setUserWallContent()">
+							</div>
 						</div>
 						<div id="account">
 						<p>Change Password</p>
 							<form name="change-password" action="javascript:changePassword()" id="change-password">
 								<div class="form-group">
-									<label for="old-pwd">Current pwd</label>
+									<label for="old-pwd" class="pwd-label">Current password:</label>
 									<input type="password" name="old-pwd" id="old-pwd" required>
 								</div>
 								<div class="form-group">
-									<label for="new-pwd">New pwd</label>
+									<label for="new-pwd" class="pwd-label">New password:</label>
 									<input type="password" name="new-pwd" id="new-pwd" required>
 								</div>
 								<div class="form-group">
-									<label for="new-pwd2">New Pwd</label>
+									<label for="new-pwd2" class="pwd-label">Repeat password:</label>
 									<input type="password" name="new-pwd2" id="new-pwd2" required>
 								</div>
-								<input type="submit" value="Change Pasword" class="form-button">
+								<input type="submit" value="Change Pasword" class="form-button" id="change-pwd-button">
 							</form>
-							<button type="button" class="form-button" onclick="signOut()">Sign out</button>
+							<button type="button" class="form-button" onclick="signOut()" id="sign-out-button">Sign out</button>
 						</div>
 					</div>
 				</div>
 				<div class="tab-box">
 					<ul id="tablist">
-						<li>
-							<button type="button" class="form-button" id="home-button" onclick="changePanel(home, browse, account)">Home</button>
-						</li>
-						<li>
-							<button type="button" class="form-button" id="browse-button" onclick="changePanel(browse, home, account)">Browse</button>
-						</li>
-						<li>
-							<button type="button" class="form-button" id="account-button" onclick="changePanel(account, browse, home)">Account</button>
-						</li>
-						<li>
-							<button type="button" class="form-button" onclick="signOut()">Sign out</button>
-						</li>
+					<li>
+						<button type="button" class="form-button" id="home-button" onclick="changePanel(home, browse, account)">Home</button>
+					</li>
+					<li>
+						<button type="button" class="form-button" id="browse-button" onclick="changePanel(browse, home, account)">Browse</button>
+					</li>
+					<li>
+						<button type="button" class="form-button" id="account-button" onclick="changePanel(account, browse, home)">Account</button>
+					</li>
 					</ul>
-				</div>
-				<div class="content-box">
-
+					<div class="logo" id="tab-box-logo">
+						<img src="../img/logo.png">
+					</div>
 				</div>
 			</div>
 		</script>

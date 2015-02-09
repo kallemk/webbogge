@@ -11,6 +11,13 @@
 	vertical-align: middle;
 }
 
+#tab-box-logo img{
+	height: 220px;
+	width: 240px;
+	vertical-align: middle;
+	margin-left: 0px;
+}
+
 .left-box{
 	width: 340px;
 	height: 400px;
@@ -48,11 +55,12 @@
 	margin-right: 5px;
 }
 
-.form-button {
-	margin-top: 10px;
-	margin-left: 5px;
-	margin-bottom: 2px;
-}
+input.form-button {
+	float: right;
+	margin-top: 5px;
+	margin-right: 40px;
+	margin-bottom: 5px;
+}	
 
 label { 
 	display: inline-block; 
@@ -78,7 +86,7 @@ h3{
 	display: none;
 }
 
-ul#personal-info{
+ul#personal-info, ul#personal-info2{
 	list-style: none;
 	float: right;
 }
@@ -91,29 +99,54 @@ ul#personal-info{
 	margin-bottom: 1px;
 }
 
-#personal-info label{
+form#browse-form{
+	margin-bottom: 1px;
+}
+
+label.personal-info{
 	width: 60px;
 }
 
-p#show-name{
+#search-field{
+	margin-top: 5px;
+}
+
+label#search-label{
+	width: 70px;
+}
+
+input#view-user-button{
+	margin-right: 10px;
+	width: 90px;
+}
+
+p#show-name, p#show-name2{
 	margin-bottom: 1px;
 	text-align: center;
 }
 
-#post-to-wall p{
+p#show-name{
+	margin-top: 5px;
+}
+
+p#show-name2{
+	margin-top: 5px;
+}
+
+#post-to-wall p, #post-to-user-wall p{
 	text-align: center;
 	margin-bottom: 2px;
 	margin-top: 5px;
 }
 
-#post-to-wall textarea{
+#post-to-wall textarea, #post-to-user-wall textarea{
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
 	resize: none;
 }
 
-#message-wall textarea{
+#message-wall textarea, #user-message-wall textarea{
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
@@ -122,18 +155,47 @@ p#show-name{
 
 .tab-box{
 	width: 250px;
-	height: 400px;
+	height: 390px;
 	background-color: b9bdc4;
 	margin: 0 auto 0 10px;
 	float: right;
 	box-shadow: 0 0 5px 1px #787f8a;
 	border-radius: 3px;
+	padding-top: 10px;
 }
 
 ul#tablist{
 	list-style: none;
-	display: inline-block;
+	display: inline;
+	width: 210px;
+	margin-left: 25px;
+	padding: 0;
 }
+
+ul#tablist li{
+	display: inline;
+}
+
+#account p{
+	text-align: center;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+label.pwd-label{
+	width: 120px;
+}
+
+input#change-pwd-button{
+	margin-right: 67px;
+}
+
+button#sign-out-button{
+	margin-top: 20px;
+	margin-left: 5px;
+}
+
+
 
 body{
 	background-color: 1a56bb;

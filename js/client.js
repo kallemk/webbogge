@@ -81,10 +81,22 @@ function setToken(token){
 	localStorage.setItem("myToken",token);
 }
 
+function getEmail(){
+	return localStorage.getItem("userEmail");
+}
+
+function setEmail(email){
+	localStorage.setItem("userEmail",email);
+}
+
 function changePanel(active, firstInactive, secondInactive){
 	active.style.display = 'block';
 	firstInactive.style.display = 'none';
 	secondInactive.style.display = 'none';
+	if(firstInactive === browse || secondInactive === browse){
+		$("#friend-info p").empty();
+		$("#user-message-wall textarea").empty();
+	}
 }
 
 function changePassword(){
@@ -126,6 +138,8 @@ function viewUser(){
 	var userMessages = serverstub.getUserMessagesByEmail(token, userEmail);
 	if(userData.success === true){
 		alert(userData.message);
+		setEmail(userEmail);
+		setUserWallContent();
 		showFriendInfo(userData);
 	}else{
 		alert(userData.message);
@@ -133,33 +147,48 @@ function viewUser(){
 }
 
 function showFriendInfo(user){
-	$('#show-name2').replaceWith("This is " + user.data.firstname + " " + user.data.familyname + "!");
-	$('#show-email2').replaceWith(user.data.email);
-	$('#show-gender2').replaceWith(user.data.gender);
-	$('#show-city2').replaceWith(user.data.city);
-	$('#show-country2').replaceWith(user.data.country);
+	$("#friend-info p").empty();
+	$('#show-name2').append("This is " + user.data.firstname + " " + user.data.familyname + "!");
+	$('#show-email2').append(user.data.email);
+	$('#show-gender2').append(user.data.gender);
+	$('#show-city2').append(user.data.city);
+	$('#show-country2').append(user.data.country);
 	document.getElementById('user-email').value = "";
 }
 
-function getUserPost(){
+function getMyPost(){
 	var token = getToken();
 	var postContent = document.getElementById('to-my-wall').value;
+	alert(postContent);
 	if(postContent === ""){
 		alert("Write something!");
 	}else{
 		var user = serverstub.getUserDataByToken(token);
 		var state = serverstub.postMessage(token, postContent, user.data.email);
-		newestPost(token, user);
+		newestPost(token, user, "#my-wall", "to-my-wall");
 	}
 }
 
-function newestPost(token, user){
+function getUserPost(){
+	var token = getToken();
+	var postContent = document.getElementById('to-user-wall').value;
+	if(postContent === ""){
+		alert("Write something!");
+	}else{
+		var email = getEmail();
+		var user = serverstub.getUserDataByEmail(token, email);
+		var state = serverstub.postMessage(token, postContent, user.data.email);
+		newestPost(token, user, "#user-wall", "to-user-wall");
+	}
+}
+
+function newestPost(token, user, messageWall, postWall){
 	var messages = serverstub.getUserMessagesByEmail(token, user.data.email);
-	var currentValue = $('#my-wall').text();
-	var author = (user.data.firstname + " " + user.data.familyname + " says:" + "\n");
+	var currentValue = $(messageWall).text();
+	var author = (messages.data[0].writer + " says:" + "\n");
 	var newValue = (author + messages.data[0].content + "\n" + currentValue);
-	$('#my-wall').val(newValue);
-	document.getElementById('to-my-wall').value = "";
+	$(messageWall).val(newValue);
+	document.getElementById(postWall).value = "";
 }
 
 function setWallContent(){
@@ -167,7 +196,19 @@ function setWallContent(){
 	var user = serverstub.getUserDataByToken(token);
 	var messages = serverstub.getUserMessagesByEmail(token, user.data.email);
 	for (i = 0; i < messages.data.length; i++) {
-		$('#my-wall').append(user.data.firstname + " " + user.data.familyname + " says:" + "\n");
+		$('#my-wall').append(messages.data[i].writer + " says:" + "\n");
 		$('#my-wall').append(messages.data[i].content + "\n");
+	}
+}
+
+function setUserWallContent(){
+	$("#user-message-wall textarea").empty();
+	var token = getToken();
+	var email = getEmail();
+	var user = serverstub.getUserDataByEmail(token, email);
+	var messages = serverstub.getUserMessagesByEmail(token, email);
+	for (i = 0; i < messages.data.length; i++) {
+		$('#user-wall').append(messages.data[i].writer + " says:" + "\n");
+		$('#user-wall').append(messages.data[i].content + "\n");
 	}
 }
