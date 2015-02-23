@@ -1,4 +1,5 @@
 from flask import Flask
+from functions import *
 
 app = Flask(__name__)
 
@@ -8,4 +9,9 @@ app = Flask(__name__)
 def index():
     return "Hello, World!"
 
-app.run(debug=True)
+@app.route('/sign_in')
+def sign_in():
+    return "temp"
+
+if __name__ == "__main__":
+    app.run(debug=True)
