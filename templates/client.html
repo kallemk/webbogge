@@ -7,6 +7,9 @@
 		<script src="../js/client.js" type="text/javascript"></script>
 		<script src="../js/serverstub.js" type="text/javascript"></script>
 		<script type="text/view" id="welcomeview">
+			<div class="user-alerts" id="welcomeviewAlerts">
+				<p id="welcomeview-alert-text"></p>
+			</div>
 			<div class="main-box">
 				<div class="left-box">
 					<div class="logo">
@@ -16,7 +19,7 @@
 				<div class="right-box">
 					<div class="login">
 						<h3>Login here!</h3>
-						<form name="log-in" id="log-in" action="javascript:loginForm()">
+						<form name="log-in" id="log-in" action="javascript:loginForm(welcomeviewAlerts)">
 							<div class="form-group">
 								<label for="email">Email</label>
 								<input type="email" name="email" id="email" required>
@@ -30,7 +33,7 @@
 					</div>
 					<div class="signup">
 						<h3>Sign up here!</h3>
-						<form name="sign-up" action="javascript:signupValidation()">
+						<form name="sign-up" action="javascript:signupValidation(welcomeviewAlerts)">
 							<div class="form-group">
 								<label for="firstname">First name</label>
 								<input type="text" name="firstname" id="firstname" required>
@@ -70,6 +73,9 @@
 			</div>
 		</script>
 		<script type="text/view" id="profileview">
+			<div class="user-alerts" id="profileviewAlerts">
+				<p id="profileview-alert-text"></p>
+			</div>
 			<div class="main-box">
 				<div class="left-box">
 					<div class="panels">
@@ -94,7 +100,7 @@
 							<div id="post-to-wall">
 								<p>What is on your mind?</p>
 								<textarea rows="2" cols="30" id="to-my-wall"></textarea>
-								<input type="button" class="form-button" value="Post To Wall" onclick="getMyPost()">
+								<input type="button" class="form-button" value="Post To Wall" onclick="getMyPost(profileviewAlerts)">
 							</div>
 							<div id="message-wall">
 								<textarea rows="9" cols="30" id="my-wall" readonly></textarea>
@@ -107,7 +113,7 @@
 									<div class="form-group" id="search-field">
 										<label for="user-email" id="search-label">Find user:</label>
 										<input type="email" name="user-email" id="user-email" required>
-										<input type="button" onclick="viewUser()" value="View user" class="form-button" id="view-user-button">
+										<input type="button" onclick="viewUser(profileviewAlerts)" value="View user" class="form-button" id="view-user-button">
 									</div>
 								</form>
 							</div>
@@ -133,16 +139,16 @@
 							<div id="post-to-user-wall">
 								<p>Write on the user wall:</p>
 								<textarea rows="2" cols="30" id="to-user-wall"></textarea>
-								<input type="button" class="form-button" value="Post To Wall" onclick="getUserPost()">
+								<input type="button" class="form-button" value="Post To Wall" onclick="getUserPost(profileviewAlerts)">
 							</div>
 							<div id="user-message-wall">
 								<textarea rows="9" cols="30" id="user-wall" readonly></textarea>
-								<input type="button" class="form-button" value="Refresh" onclick="setUserWallContent()">
+								<input type="button" class="form-button" value="Refresh" onclick="setUserWallContent(profileviewAlerts)">
 							</div>
 						</div>
 						<div id="account">
 						<p>Change Password</p>
-							<form name="change-password" action="javascript:changePassword()" id="change-password">
+							<form name="change-password" action="javascript:changePassword(profileviewAlerts)" id="change-password">
 								<div class="form-group">
 									<label for="old-pwd" class="pwd-label">Current password:</label>
 									<input type="password" name="old-pwd" id="old-pwd" required>
@@ -157,20 +163,20 @@
 								</div>
 								<input type="submit" value="Change Pasword" class="form-button" id="change-pwd-button">
 							</form>
-							<button type="button" class="form-button" onclick="signOut()" id="sign-out-button">Sign out</button>
+							<button type="button" class="form-button" onclick="signOut(profileviewAlerts)" id="sign-out-button">Sign out</button>
 						</div>
 					</div>
 				</div>
 				<div class="tab-box">
 					<ul id="tablist">
 					<li>
-						<button type="button" class="form-button" id="home-button" onclick="changePanel(home, browse, account)">Home</button>
+						<button type="button" class="form-button" id="home-button" onclick="changePanel(home, browse, account, profileviewAlerts)">Home</button>
 					</li>
 					<li>
-						<button type="button" class="form-button" id="browse-button" onclick="changePanel(browse, home, account)">Browse</button>
+						<button type="button" class="form-button" id="browse-button" onclick="changePanel(browse, home, account, profileviewAlerts)">Browse</button>
 					</li>
 					<li>
-						<button type="button" class="form-button" id="account-button" onclick="changePanel(account, browse, home)">Account</button>
+						<button type="button" class="form-button" id="account-button" onclick="changePanel(account, browse, home, profileviewAlerts)">Account</button>
 					</li>
 					</ul>
 					<div class="logo" id="tab-box-logo">

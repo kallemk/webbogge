@@ -2,7 +2,26 @@
 .main-box{
 	height: 400px;
 	width: 600px;
-	margin: 100px auto 0 auto;
+	margin: 0 auto 0 auto;
+}
+
+.user-alerts{
+	width: 600px;
+	height: 30px;
+	background: green;
+	margin: 100px auto 10px auto;
+}
+
+#profileviewAlerts{
+	background-color: 1a56bb;
+}
+
+#welcomeviewAlerts{
+	background-color: 1a56bb;
+}
+p#welcomeview-alert-text, p#profileview-alert-text{
+	padding-top: 7px;
+	text-align: center;
 }
 
 .left-box{
