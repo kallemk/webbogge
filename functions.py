@@ -1,12 +1,17 @@
-import math
+import math, random
 from database_helper import *
 from flask import jsonify
 
 def sign_in(email, password):
-    print(password_check_db(email, password))
     if email_check_db(email) and password_check_db(email, password):
         # Here the token generator should be called and returned, but now I'm just returning a string.
-        return "User should be logged in"
+        token = create_token()
+        """
+        Here the token should somehow be stored among logged in users. How is that supposed to work?
+        """
+        return jsonify(success=True,
+                       message="Successfully signed in.",
+                       data=token)
     else:
         return jsonify(success=False,
                        message="Wrong username or password.")
@@ -56,7 +61,7 @@ def create_token():
     letters = "abcdefghiklmnopqrstuvwwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
     token = ""
     for i in range(0, 36, 1):
-        token += letters[math.floor(math.random()*letters.length)]
+        token += letters[int(math.floor(random.random()*len(letters)))]
     return token
 
 def init_db_function():
