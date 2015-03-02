@@ -20,6 +20,7 @@ def sign_up(email, password, firstname, familyname, gender, city, country):
     """Checks if the email is unique and
      sends the sign-up information to database helper.
      Returns a success or failure message"""
+    # The input might have to be modified if the client sends a formData object.
     if email_check_db(email):
         return jsonify(success=False,
                        message="User already exists.")
@@ -33,27 +34,55 @@ def sign_up(email, password, firstname, familyname, gender, city, country):
                            message="Formdata not complete.")
 
 
-
-
 def sign_out(token):
-    return "success or false"
+    """"""
+    # Check if the token exists/user is logged in
+    # Remove the token from logged in users
+    # "persist logged in users" will this be needed here? How does the local storage work with backend implemented?
+    return jsonify(success=True,
+                   message="Successfully signed out.")
+
+    return jsonify(success=True,
+                   message="You are not signed in.")
+
 
 def change_password(token, old_pwd, new_pwd):
-    return "success or false"
+    """"""
+    # Check if token exists/user logged in
+    # Get the email for the token. Assign to variable.
+    email = "oskno129@student.liu.se"
+    # Check if the old_password corresponds to the password in the db for the email
+    if password_check_db(email, old_pwd):
+        # Assign new password
+        change_password_db(email, old_pwd, new_pwd)
+        # Persist users
+        return jsonify(success=True,
+                   message="Password changed.")
+    else:
+        return jsonify(success=False,
+                   message="Wrong password.")
+
+    return jsonify(success=True,
+                   message="You are not logged in.")
 
 def get_user_data_by_token(token):
+    """"""
     return "user"
 
 def get_user_data_by_email(token, email):
+    """"""
     return "user"
 
 def get_user_messages_by_token(token):
+    """"""
     return "messages"
 
 def get_user_messages_by_email(token, email):
+    """"""
     return "messages"
 
 def post_message(token, message, email):
+    """"""
     return "tackar"
 
 def create_token():

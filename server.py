@@ -14,16 +14,31 @@ def index():
 def server_sign_in():
     """Signs the user in"""
     (email,password) = ("oskno129@student.liu.se","webbogge")
-    #This function is still under construction!!!
+    # This function is still under construction!!!
     return sign_in(email,password)
 
 
 @app.route('/sign_up')
 def server_sign_up():
     """Receives sing-in information and sends it to functions."""
-    #At the moment we are using dummy code
+    # At the moment we are using dummy code
     (email, password, firstname, familyname, gender, city, country) = ("oskno129@student.liu.se","webbogge","Oskar","Norberg","Male","Linkoping","Sweden")
     return sign_up(email, password, firstname, familyname, gender, city, country)
+
+
+@app.route('/sign_out')
+def server_sign_out():
+    """Receives the token for the user that will be signed out"""
+    token = "blahblahbla"
+    return sign_out(token)
+
+
+@app.route('/change_password')
+def server_change_password():
+    """Receives a token, old password and new password.
+    They are sent further to functions.py in order for the password to be changed."""
+    (token, old_pwd, new_pwd) = ("blahblahblah", "webbkalle", "webbogge")
+    return change_password(token, old_pwd, new_pwd)
 
 
 @app.route('/test')

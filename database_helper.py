@@ -39,6 +39,14 @@ def close_db(error):
         g.sqlite_db.close()
 
 
+def init_db():
+    """Call this method to run the init the database with the database.sql file"""
+    db = get_db()
+    with app.open_resource('database.sql', mode='r') as f:
+        db.cursor().executescript(f.read())
+    db.commit()
+
+
 def email_check_db(email):
     """Checks if the email already is in use"""
     c = get_db()
@@ -49,7 +57,7 @@ def email_check_db(email):
 
 
 def password_check_db(email, password):
-    """Checks if the email has the given password"""
+    """Checks if the email has the given password. 1 if password exists, None if not."""
     # Is this a safe way to handle the password? Might have to be changed later.
     c = get_db()
     # Returns 1 (anything) if the email exists and has has the password.
@@ -64,13 +72,11 @@ def sign_up_db(email, password, firstname, familyname, gender, city, country):
     c.execute("INSERT INTO users(email, password, firstname, familyname, gender, city, country) VALUES(?,?,?,?,?,?,?)", (email, password, firstname, familyname, gender, city, country))
     c.commit()
 
-def init_db():
-    """Call this method to run the init the database with the database.sql file"""
-    db = get_db()
-    with app.open_resource('database.sql', mode='r') as f:
-        db.cursor().executescript(f.read())
-    db.commit()
-
+def change_password_db(email, old_pwd, new_pwd):
+    """Changes the old_pwd with the new_pwd in the row with the email and old_pwd"""
+    c = get_db()
+    c.execute("UPDATE users SET password=? WHERE email=? AND password=?", (new_pwd, email, old_pwd))
+    c.commit()
 
 def test_db():
     """Used to test the connection with server.py"""
