@@ -45,7 +45,7 @@ def sign_out(token):
             return jsonify(success=True,
                            message="Successfully signed out.")
     except:
-        return jsonify(success=True,
+        return jsonify(success=False,
                        message="You are not signed in.")
 
 
@@ -54,6 +54,8 @@ def change_password(token, old_pwd, new_pwd):
     # Check if token exists/user logged in
     # Get the email for the token. Assign to variable.
     email = session[token]
+    print(token)
+    print(email)
     # Check if the old_password corresponds to the password in the db for the email
     if password_check_db(email, old_pwd):
         # Assign new password

@@ -40,9 +40,9 @@ def close_db(error):
 
 
 def init_db():
-    """Call this method to run the init the database with the database.sql file"""
+    """Call this method to run the init the database with the database.schema file"""
     db = get_db()
-    with app.open_resource('database.sql', mode='r') as f:
+    with app.open_resource('database.schema', mode='r') as f:
         db.cursor().executescript(f.read())
     db.commit()
 
