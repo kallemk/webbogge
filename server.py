@@ -3,6 +3,8 @@ from functions import *
 
 app = Flask(__name__)
 
+app.secret_key = "kallemarskit"
+
 
 @app.route('/')
 @app.route('/index')
@@ -34,7 +36,7 @@ def server_sign_up():
 @app.route('/sign_out')
 def server_sign_out():
     """Receives the token for the user that will be signed out"""
-    token = "blahblahbla"
+    token = "abc"
     return sign_out(token)
 
 

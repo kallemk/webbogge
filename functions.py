@@ -2,16 +2,12 @@ import math, random
 from database_helper import *
 from flask import jsonify, session
 
+
+
 def sign_in(email, password):
     if email_check_db(email) and password_check_db(email, password):
-        # Here the token generator should be called and returned, but now I'm just returning a string.
         token = create_token()
-        # session['user_email'] = email
-        # session['user_token'] = token
-
-        """
-        Here the token should somehow be stored among logged in users. How is that supposed to work?
-        """
+        session[token] = email
         return jsonify(success=True,
                        message="Successfully signed in.",
                        data=token)
@@ -38,22 +34,25 @@ def sign_up(email, password, firstname, familyname, gender, city, country):
 
 
 def sign_out(token):
-    """"""
+    """Checks if user is signed in and then removes the user from the signed in users"""
     # Check if the token exists/user is logged in
     # Remove the token from logged in users
     # "persist logged in users" will this be needed here? How does the local storage work with backend implemented?
-    return jsonify(success=True,
-                   message="Successfully signed out.")
-
-    return jsonify(success=True,
-                   message="You are not signed in.")
+    try:
+        if session[token]:
+            session.pop(token, None)
+            return jsonify(success=True,
+                           message="Successfully signed out.")
+    except:
+        return jsonify(success=True,
+                       message="You are not signed in.")
 
 
 def change_password(token, old_pwd, new_pwd):
     """"""
     # Check if token exists/user logged in
     # Get the email for the token. Assign to variable.
-    email = "oskno129@student.liu.se"
+    email = session[token]
     # Check if the old_password corresponds to the password in the db for the email
     if password_check_db(email, old_pwd):
         # Assign new password
@@ -101,4 +100,5 @@ def init_db_function():
 
 def test_db_function(a,b):
     #test_db()
-    return a + b
+    session["hej"]
+    return "bizmillah"
