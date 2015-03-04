@@ -1,6 +1,7 @@
 import math, random
 from database_helper import *
 from flask import jsonify, session
+import json
 
 
 
@@ -69,11 +70,28 @@ def change_password(token, old_pwd, new_pwd):
 
 def get_user_data_by_token(token):
     """"""
-    return "user"
+    email = session[token]
+    return get_user_data_by_email(token, email)
 
 def get_user_data_by_email(token, email):
     """"""
-    return "user"
+    try:
+        if session[token]:
+            if email_check_db(email):
+                user = get_user_db(email)
+                #DETTA NEDAN FUNKAR INTE
+                user_dictionary = [ {'email': user.email, 'firstname': user.firstname,
+                                     'familyname': user.familyname, 'gender': user.gender,
+                                     'city': user.city, 'country': user.country} ]
+                return jsonify(success=True,
+                               message="User data retrieved",
+                               data=user_dictionary)
+            else:
+                return jsonify(success=False,
+                               message="No such user.")
+    except:
+        return jsonify(success=False,
+                       message="You are not signed in.")
 
 def get_user_messages_by_token(token):
     """"""

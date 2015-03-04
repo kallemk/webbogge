@@ -55,6 +55,12 @@ def email_check_db(email):
     c.commit()
     return result.fetchone()
 
+def get_user_db(email):
+    """Fetches all parameters in a user"""
+    c = get_db()
+    user = c.execute("SELECT * FROM users WHERE email=?", (email,))
+    c.commit()
+    return user
 
 def password_check_db(email, password):
     """Checks if the email has the given password. 1 if password exists, None if not."""

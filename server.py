@@ -33,10 +33,10 @@ def server_sign_up():
     return sign_up(email, password, firstname, familyname, gender, city, country)
 
 
-@app.route('/sign_out')
+@app.route('/sign_out', methods=['POST'])
 def server_sign_out():
     """Receives the token for the user that will be signed out"""
-    token = "def"
+    token = request.form['token']
     return sign_out(token)
 
 
@@ -44,11 +44,15 @@ def server_sign_out():
 def server_change_password():
     """Receives a token, old password and new password.
     They are sent further to functions.py in order for the password to be changed."""
-    old_pwd = request.form['old_pw']
+    old_pwd = request.form['old_pwd']
     new_pwd = request.form['new_pwd']
     token = request.form['token']
     return change_password(token, old_pwd, new_pwd)
 
+@app.route('/get_user', methods=['POST'])
+def server_get_user_by_token():
+    token = request.form['token']
+    return get_user_data_by_token(token)
 
 @app.route('/test')
 def test_page():
