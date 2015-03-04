@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from functions import *
 
 app = Flask(__name__)
@@ -10,19 +10,24 @@ def index():
     return "Hello, World!"
 
 
-@app.route('/sign_in')
+@app.route('/sign_in', methods=['POST'])
 def server_sign_in():
     """Signs the user in"""
-    (email,password) = ("oskno129@student.liu.se","webbogge")
-    # This function is still under construction!!!
-    return sign_in(email,password)
+    email = request.form['email']
+    password = request.form['password']
+    return sign_in(email, password)
 
 
-@app.route('/sign_up')
+@app.route('/sign_up', methods=['POST'])
 def server_sign_up():
     """Receives sing-in information and sends it to functions."""
-    # At the moment we are using dummy code
-    (email, password, firstname, familyname, gender, city, country) = ("oskno129@student.liu.se","webbogge","Oskar","Norberg","Male","Linkoping","Sweden")
+    email = request.form['email']
+    password = request.form['password']
+    firstname = request.form['firstname']
+    familyname = request.form['familyname']
+    gender = request.form['gender']
+    city = request.form['city']
+    country = request.form['country']
     return sign_up(email, password, firstname, familyname, gender, city, country)
 
 
@@ -33,11 +38,13 @@ def server_sign_out():
     return sign_out(token)
 
 
-@app.route('/change_password')
+@app.route('/change_password', methods=['POST'])
 def server_change_password():
     """Receives a token, old password and new password.
     They are sent further to functions.py in order for the password to be changed."""
-    (token, old_pwd, new_pwd) = ("blahblahblah", "webbkalle", "webbogge")
+    old_pwd = request.form['old_pw']
+    new_pwd = request.form['new_pwd']
+    token = request.form['token']
     return change_password(token, old_pwd, new_pwd)
 
 
