@@ -82,6 +82,7 @@ def get_user_data_by_email(token, email):
             if email_check_db(email):
                 user = get_user_db(email)
                 #DETTA NEDAN FUNKAR INTE
+                print("ogge din fula javel")
                 user_dictionary = [ {'email': user.email, 'firstname': user.firstname,
                                      'familyname': user.familyname, 'gender': user.gender,
                                      'city': user.city, 'country': user.country} ]
