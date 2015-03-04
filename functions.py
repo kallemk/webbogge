@@ -81,14 +81,12 @@ def get_user_data_by_email(token, email):
         if session[token]:
             if email_check_db(email):
                 user = get_user_db(email)
-                #DETTA NEDAN FUNKAR INTE
-                print("ogge din fula javel")
-                user_dictionary = [ {'email': user.email, 'firstname': user.firstname,
-                                     'familyname': user.familyname, 'gender': user.gender,
-                                     'city': user.city, 'country': user.country} ]
+                user_information = [ {'Email': user[0], 'Firstname': user[2],
+                                     'Familyname': user[3], 'Gender': user[4],
+                                     'City': user[5], 'Country': user[6]} ]
                 return jsonify(success=True,
                                message="User data retrieved",
-                               data=user_dictionary)
+                               data=user_information)
             else:
                 return jsonify(success=False,
                                message="No such user.")

@@ -60,7 +60,7 @@ def get_user_db(email):
     c = get_db()
     user = c.execute("SELECT * FROM users WHERE email=?", (email,))
     c.commit()
-    return user
+    return user.fetchone()
 
 def password_check_db(email, password):
     """Checks if the email has the given password. 1 if password exists, None if not."""
