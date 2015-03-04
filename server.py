@@ -3,6 +3,8 @@ from functions import *
 
 app = Flask(__name__)
 
+app.secret_key = "kallemarskit"
+
 
 @app.route('/')
 @app.route('/index')
@@ -13,7 +15,7 @@ def index():
 @app.route('/sign_in')
 def server_sign_in():
     """Signs the user in"""
-    (email,password) = ("oskno129@student.liu.se","webbogge")
+    (email,password) = ("oskno129@student.liu.se","webbkalle")
     # This function is still under construction!!!
     return sign_in(email,password)
 
@@ -29,7 +31,7 @@ def server_sign_up():
 @app.route('/sign_out')
 def server_sign_out():
     """Receives the token for the user that will be signed out"""
-    token = "blahblahbla"
+    token = "abc"
     return sign_out(token)
 
 
