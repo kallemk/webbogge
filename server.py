@@ -36,7 +36,7 @@ def server_sign_up():
 @app.route('/sign_out')
 def server_sign_out():
     """Receives the token for the user that will be signed out"""
-    token = "abc"
+    token = "def"
     return sign_out(token)
 
 
