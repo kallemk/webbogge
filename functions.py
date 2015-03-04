@@ -54,8 +54,6 @@ def change_password(token, old_pwd, new_pwd):
     # Check if token exists/user logged in
     # Get the email for the token. Assign to variable.
     email = session[token]
-    print(token)
-    print(email)
     # Check if the old_password corresponds to the password in the db for the email
     if password_check_db(email, old_pwd):
         # Assign new password
@@ -71,16 +69,20 @@ def change_password(token, old_pwd, new_pwd):
                    message="You are not logged in.")
 
 def get_user_data_by_token(token):
-    """"""
+    """The function takes the token of the currently logged in user
+    and sends the session to the function that fetches a user"""
     email = session[token]
     return get_user_data_by_email(token, email)
 
 def get_user_data_by_email(token, email):
-    """"""
+    """If there is an active session and the email that is searched for
+    exists, a user will be fetched from the database table users"""
     try:
         if session[token]:
             if email_check_db(email):
+                #Fetch the specific user from the database
                 user = get_user_db(email)
+                #Setting up a python dictionary for json to interpret
                 user_information = [ {'Email': user[0], 'Firstname': user[2],
                                      'Familyname': user[3], 'Gender': user[4],
                                      'City': user[5], 'Country': user[6]} ]
