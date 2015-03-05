@@ -37,14 +37,12 @@ def sign_up(email, password, firstname, familyname, gender, city, country):
 def sign_out(token):
     """Checks if user is signed in and then removes the user from the signed in users"""
     # Check if the token exists/user is logged in
-    # Remove the token from logged in users
-    # "persist logged in users" will this be needed here? How does the local storage work with backend implemented?
-    try:
-        if session[token]:
-            session.pop(token, None)
-            return jsonify(success=True,
-                           message="Successfully signed out.")
-    except:
+    if session_exists(token):
+        # Remove the token from logged in users
+        session.pop(token, None)
+        return jsonify(success=True,
+                       message="Successfully signed out.")
+    else:
         return jsonify(success=False,
                        message="You are not signed in.")
 
@@ -52,47 +50,52 @@ def sign_out(token):
 def change_password(token, old_pwd, new_pwd):
     """"""
     # Check if token exists/user logged in
-    # Get the email for the token. Assign to variable.
-    email = session[token]
-    # Check if the old_password corresponds to the password in the db for the email
-    if password_check_db(email, old_pwd):
-        # Assign new password
-        change_password_db(email, old_pwd, new_pwd)
-        # Persist users
-        return jsonify(success=True,
-                   message="Password changed.")
+    if session_exists(token):
+        # Get the email for the token. Assign to variable.
+        email = session[token]
+        # Check if the old_password corresponds to the password in the db for the email
+        if password_check_db(email, old_pwd):
+            # Assign new password
+            change_password_db(email, old_pwd, new_pwd)
+            # Persist users
+            return jsonify(success=True,
+                       message="Password changed.")
+        else:
+            return jsonify(success=False,
+                       message="Wrong password.")
     else:
-        return jsonify(success=False,
-                   message="Wrong password.")
-
-    return jsonify(success=True,
-                   message="You are not logged in.")
+        return jsonify(success=True,
+                       message="You are not logged in.")
 
 def get_user_data_by_token(token):
     """The function takes the token of the currently logged in user
     and sends the session to the function that fetches a user"""
-    email = session[token]
-    return get_user_data_by_email(token, email)
+    if session_exists(token):
+        email = session[token]
+        return get_user_data_by_email(token, email)
+    else:
+        return jsonify(success=False,
+                       message="You are not signed in.")
+
 
 def get_user_data_by_email(token, email):
     """If there is an active session and the email that is searched for
     exists, a user will be fetched from the database table users"""
-    try:
-        if session[token]:
-            if email_check_db(email):
-                #Fetch the specific user from the database
-                user = get_user_db(email)
-                #Setting up a python dictionary for json to interpret
-                user_information = [ {'Email': user[0], 'Firstname': user[2],
-                                     'Familyname': user[3], 'Gender': user[4],
-                                     'City': user[5], 'Country': user[6]} ]
-                return jsonify(success=True,
-                               message="User data retrieved",
-                               data=user_information)
-            else:
-                return jsonify(success=False,
-                               message="No such user.")
-    except:
+    if session_exists(token):
+        if email_check_db(email):
+            #Fetch the specific user from the database
+            user = get_user_db(email)
+            #Setting up a python dictionary for json to interpret
+            user_information = [ {'Email': user[0], 'Firstname': user[2],
+                                 'Familyname': user[3], 'Gender': user[4],
+                                 'City': user[5], 'Country': user[6]} ]
+            return jsonify(success=True,
+                           message="User data retrieved",
+                           data=user_information)
+        else:
+            return jsonify(success=False,
+                           message="No such user.")
+    else:
         return jsonify(success=False,
                        message="You are not signed in.")
 
@@ -107,6 +110,14 @@ def get_user_messages_by_email(token, email):
 def post_message(token, message, email):
     """"""
     return "tackar"
+
+def session_exists(token):
+    try:
+        if session[token]:
+            return True
+    except:
+        pass
+    return False
 
 def create_token():
     """Returns a randomly generated token"""

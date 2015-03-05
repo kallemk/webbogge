@@ -51,10 +51,16 @@ def server_change_password():
     print(token)
     return change_password(token, old_pwd, new_pwd)
 
-@app.route('/get_user', methods=['POST'])
+@app.route('/get_user_by_token', methods=['POST'])
 def server_get_user_by_token():
     token = request.form['token']
     return get_user_data_by_token(token)
+
+@app.route('/get_user_by_email', methods=['POST'])
+def server_get_user_by_email():
+    token = request.form['token']
+    email = request.form['email']
+    return get_user_data_by_email(token, email)
 
 @app.route('/test')
 def test_page():
