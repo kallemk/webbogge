@@ -84,6 +84,18 @@ def change_password_db(email, old_pwd, new_pwd):
     c.execute("UPDATE users SET password=? WHERE email=? AND password=?", (new_pwd, email, old_pwd))
     c.commit()
 
+def post_message_db(message, email_wall, email_sender):
+    c = get_db()
+    c.execute("INSERT INTO messages(email_sender, email_wall, message) VALUES(?,?,?)", (email_sender, email_wall, message))
+    c.commit()
+
+def messages_by_email_db(email):
+    c = get_db()
+    result = c.execute("SELECT id, email_sender, email_wall, message FROM messages WHERE email_wall=?", (email,))
+    c.commit()
+    return result.fetchall()
+
+
 def test_db():
     """Used to test the connection with server.py"""
     return "Testresultat"

@@ -51,16 +51,40 @@ def server_change_password():
     print(token)
     return change_password(token, old_pwd, new_pwd)
 
+
 @app.route('/get_user_by_token', methods=['POST'])
 def server_get_user_by_token():
     token = request.form['token']
     return get_user_data_by_token(token)
+
 
 @app.route('/get_user_by_email', methods=['POST'])
 def server_get_user_by_email():
     token = request.form['token']
     email = request.form['email']
     return get_user_data_by_email(token, email)
+
+
+@app.route('/post_message', methods=['POST'])
+def server_post_message():
+    token = request.form['token']
+    message = request.form['message']
+    email_wall = request.form['email_wall']
+    return post_message(token, message, email_wall)
+
+
+@app.route('/messages_by_email', methods=['POST'])
+def server_messages_by_email():
+    token = request.form['token']
+    email = request.form['email']
+    return messages_by_email(token, email)
+
+
+@app.route('/messages_by_token', methods=['POST'])
+def server_messages_by_token():
+    token = request.form['token']
+    return messages_by_token(token)
+
 
 @app.route('/test')
 def test_page():
@@ -74,7 +98,9 @@ def server_test_db():
     """Function for testing the communication between
     server.py-functions.py-database_helper.py"""
     (a,b)=("Oskar","Norberg")
-    return test_db_function(a,b)
+    password_validation("aaaaa")
+    return "check pycharm log"
+
 
 @app.route('/init_db')
 def server_init_db():

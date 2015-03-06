@@ -25,6 +25,9 @@ def sign_up(email, password, firstname, familyname, gender, city, country):
         return jsonify(success=False,
                        message="User already exists.")
     else:
+        if password_validation(password) is False:
+            return jsonify(success=False,
+                           message="The password must contain at least 5 characters")
         try:
             sign_up_db(email, password, firstname, familyname, gender, city, country)
             return jsonify(success=True,
@@ -55,11 +58,14 @@ def change_password(token, old_pwd, new_pwd):
         email = session[token]
         # Check if the old_password corresponds to the password in the db for the email
         if password_check_db(email, old_pwd):
-            # Assign new password
-            change_password_db(email, old_pwd, new_pwd)
-            # Persist users
-            return jsonify(success=True,
-                       message="Password changed.")
+            if password_validation(new_pwd) is True:
+                # Assign new password
+                change_password_db(email, old_pwd, new_pwd)
+                return jsonify(success=True,
+                           message="Password changed.")
+            else:
+                return jsonify(success=False,
+                           message="The password must contain at least 5 characters")
         else:
             return jsonify(success=False,
                        message="Wrong password.")
@@ -86,9 +92,12 @@ def get_user_data_by_email(token, email):
             #Fetch the specific user from the database
             user = get_user_db(email)
             #Setting up a python dictionary for json to interpret
-            user_information = [ {'Email': user[0], 'Firstname': user[2],
-                                 'Familyname': user[3], 'Gender': user[4],
-                                 'City': user[5], 'Country': user[6]} ]
+            user_information = [{'email': user[0],
+                                  'firstname': user[2],
+                                  'familyname': user[3],
+                                  'gender': user[4],
+                                  'city': user[5],
+                                  'country': user[6]}]
             return jsonify(success=True,
                            message="User data retrieved",
                            data=user_information)
@@ -99,25 +108,92 @@ def get_user_data_by_email(token, email):
         return jsonify(success=False,
                        message="You are not signed in.")
 
-def get_user_messages_by_token(token):
-    """"""
-    return "messages"
+def messages_by_token(token):
+    """The function takes the token of the currently logged in user
+    and sends the token together with it's email to the function that fetches the messages"""
+    if session_exists(token):
+        email = session[token]
+        return messages_by_email(token, email)
+    else:
+        return jsonify(success=False,
+                       message="You are not signed in.")
 
-def get_user_messages_by_email(token, email):
-    """"""
-    return "messages"
 
-def post_message(token, message, email):
-    """"""
-    return "tackar"
+def messages_by_email(token, email):
+    """Receives a token and an email.
+    First the function looks for a session with the token as a key.
+    Then the the exsistance of the email is checked.
+    Finally the messages for the requested user are retreived from the database
+    and the result is returned together with a message."""
+    if session_exists(token):
+        if email_check_db(email):
+            messages = messages_by_email_db(email)
+            print(messages)
+            # I'm not sure if this is the right format to return the messages.
+            # Now it returns the massages as a list of dictionaries.
+            # A quite good solution according to me
+            messages_list = []
+            for i in messages:
+                print(i[1])
+                message = {'id' : i[0],
+                           'email_sender' : i[1],
+                           'email_wall' : i[2],
+                           'message' : i[3]}
+                messages_list.append(message)
+            return jsonify(success=True,
+                           message="User messages retreived.",
+                           data=messages_list)
+        else:
+            return jsonify(success=False,
+                           message="No such user.")
+    else:
+        return jsonify(success=False,
+                       message="You are not signed in.")
+
+
+
+def post_message(token, message, email_wall):
+    """The function takes in the message, an email for the wall it will be posted on and a token.
+    The token is checked and used to get the email for the sender.
+    The the message is inserted into the database and a success message is returned"""
+    if session_exists(token):
+        email_sender = session[token]
+        if email_wall == None:
+            email_wall = email_sender
+        if email_check_db(email_wall):
+            post_message_db(message, email_wall, email_sender)
+            return jsonify(success=True,
+                       message="Message posted")
+        else:
+            return jsonify(success=False,
+                       message="No such user")
+    else:
+        return jsonify(success=False,
+                       message="You are not signed in.")
+
+
+def password_validation(pwd):
+    """Checks the length of the password.
+    Returns True if the password is long enough
+    and false if the password is too short.
+    This function is just an extra feature and not required"""
+    min_length = 5 # Set the min length of the password.
+    if len(pwd) < min_length:
+        return False
+    else:
+        return True
+
 
 def session_exists(token):
+    """Short function that checks if there is a session for the token.
+    Returns true or false"""
     try:
         if session[token]:
             return True
     except:
         pass
     return False
+
 
 def create_token():
     """Returns a randomly generated token"""
