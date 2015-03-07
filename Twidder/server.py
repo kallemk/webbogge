@@ -1,7 +1,9 @@
-from flask import Flask, request
-from functions import *
+from flask import request
 
-app = Flask(__name__)
+from Twidder.functions import *
+
+
+app = Flask(__name__, static_url_path='/static')
 
 app.secret_key = "kallemarskit"
 
@@ -9,7 +11,7 @@ app.secret_key = "kallemarskit"
 @app.route('/')
 @app.route('/index')
 def index():
-    return "Hello, World!"
+    return app.send_static_file('client.html')
 
 
 @app.route('/sign_in', methods=['POST'])

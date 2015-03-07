@@ -1,6 +1,10 @@
-import math, random
-from database_helper import *
+import math
+import random
+
 from flask import jsonify, session
+
+from Twidder.database_helper import *
+
 
 def sign_in(email, password):
     if email_check_db(email) and password_check_db(email, password):
