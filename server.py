@@ -47,8 +47,6 @@ def server_change_password():
     old_pwd = request.form['old_pwd']
     new_pwd = request.form['new_pwd']
     token = request.form['token']
-    print(old_pwd)
-    print(token)
     return change_password(token, old_pwd, new_pwd)
 
 

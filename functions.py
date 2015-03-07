@@ -1,9 +1,6 @@
 import math, random
 from database_helper import *
 from flask import jsonify, session
-import json
-
-
 
 def sign_in(email, password):
     if email_check_db(email) and password_check_db(email, password):
@@ -122,19 +119,17 @@ def messages_by_token(token):
 def messages_by_email(token, email):
     """Receives a token and an email.
     First the function looks for a session with the token as a key.
-    Then the the exsistance of the email is checked.
-    Finally the messages for the requested user are retreived from the database
+    Then the the existence of the email is checked.
+    Finally the messages for the requested user are retrieved from the database
     and the result is returned together with a message."""
     if session_exists(token):
         if email_check_db(email):
             messages = messages_by_email_db(email)
-            print(messages)
             # I'm not sure if this is the right format to return the messages.
             # Now it returns the massages as a list of dictionaries.
             # A quite good solution according to me
             messages_list = []
             for i in messages:
-                print(i[1])
                 message = {'id' : i[0],
                            'email_sender' : i[1],
                            'email_wall' : i[2],
@@ -158,7 +153,7 @@ def post_message(token, message, email_wall):
     The the message is inserted into the database and a success message is returned"""
     if session_exists(token):
         email_sender = session[token]
-        if email_wall == None:
+        if email_wall == "":
             email_wall = email_sender
         if email_check_db(email_wall):
             post_message_db(message, email_wall, email_sender)
