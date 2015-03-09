@@ -24,16 +24,22 @@ def server_sign_in():
 
 @app.route('/sign_up', methods=['POST'])
 def server_sign_up():
+    print "bajs"
+    form = request.form
+    print "bajsare"
+    print form[0]
+    print "hejhej"
     """Receives sing-in information and sends it to functions."""
-    email = request.form['signup-email']
-    password = request.form['signup-pwd']
+    #email = request.form['signup-email']
+    #password = request.form['signup-pwd']
     firstname = request.form['firstname']
-    familyname = request.form['familyname']
-    gender = request.form['gender']
-    city = request.form['city']
-    country = request.form['country']
-    return sign_up(email, password, firstname, familyname, gender, city, country)
-
+    print "bajs2"
+    print firstname
+    #familyname = request.form['familyname']
+    #gender = request.form['gender']
+    #city = request.form['city']
+    #country = request.form['country']
+    #return sign_up(email, password, firstname, familyname, gender, city, country)
 
 @app.route('/sign_out', methods=['POST'])
 def server_sign_out():

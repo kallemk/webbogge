@@ -33,7 +33,7 @@
 					</div>
 					<div class="signup">
 						<h3>Sign up here!</h3>
-						<form name="sign-up" method="POST" action="javascript:signUp(welcomeviewAlerts)">
+						<form id="sign-up" class="sign-up" method="POST">
 							<div class="form-group">
 								<label for="firstname">First name</label>
 								<input type="text" name="firstname" id="firstname" required>
@@ -66,7 +66,7 @@
 								<label for="signup-pwd2">Repeat pwd</label>
 								<input type="password" name="signup-pwd2" id="signup-pwd2" required>
 							</div>
-							<input type="submit" value="Sign Up" class="form-button">
+							<input type="button" value="Sign Up" class="form-button" onclick="signUp(welcomeviewAlerts)">
 						</form>
 					</div>
 				</div>

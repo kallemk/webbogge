@@ -17,13 +17,32 @@ window.onload = function(){
 };
 
 function signUp(view){
+    console.log("Startar signup")
     var xmlhttp;
     var response;
 
-    var formData = new FormData(document.getElementById("sign-up"));
+
+    //var formData = document.getElementById("firstname");
+    //var formData = "signup-email="+ "bajs@hotmail.com"
+
+    //var formData = new FormData();
+    //formData.append('firstname', document.getElementById("firstname").value);
+
+    var formData = [];
+    var form = document.getElementById("sign-up");
+
+    formData["firstname"] =  form[0].value;
+    //formData["familyname"] =  form[1].value;
+    //formData["gender"] =  form[2].value;
+    //formData["city"] =  form[3].value;
+    //formData["country"] =  form[4].value;
+    //formData["email"] =  form[5].value;
+    //formData["password"] =  form[6].value;
+
 
     xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "sign_up", true);
+    xmlhttp.open("POST", "sign_up", "true");
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xmlhttp.onreadystatechange = function(){
         if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
             response = JSON.parse(xmlhttp.responseText);
@@ -35,7 +54,7 @@ function signUp(view){
             }
         }
     };
-
+    console.log(formData);
     xmlhttp.send(formData);
 }
 
@@ -47,6 +66,7 @@ function signIn(view){
 
     xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "sign_in", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xmlhttp.onreadystatechange = function(){
         if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
             response = JSON.parse(xmlhttp.responseText);
