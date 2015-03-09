@@ -1,8 +1,8 @@
 displayView = function(currentView){
     $('body').html(document.getElementById(currentView).text);
     if(currentView === "profileview"){
-    	showMyInformation();
-    	setWallContent();
+    	//showMyInformation();
+    	//setWallContent();
     }
 };
 
@@ -21,23 +21,15 @@ function signUp(view){
     var xmlhttp;
     var response;
 
-
-    //var formData = document.getElementById("firstname");
-    //var formData = "signup-email="+ "bajs@hotmail.com"
-
-    //var formData = new FormData();
-    //formData.append('firstname', document.getElementById("firstname").value);
-
-    var formData = [];
     var form = document.getElementById("sign-up");
 
-    formData["firstname"] =  form[0].value;
-    //formData["familyname"] =  form[1].value;
-    //formData["gender"] =  form[2].value;
-    //formData["city"] =  form[3].value;
-    //formData["country"] =  form[4].value;
-    //formData["email"] =  form[5].value;
-    //formData["password"] =  form[6].value;
+    var firstname =  form[0].value;
+    var familyname = form[1].value;
+    var gender = form[2].value;
+    var city = form[3].value;
+    var country = form[4].value;
+    var email = form[5].value;
+    var pwd = form[6].value;
 
 
     xmlhttp = new XMLHttpRequest();
@@ -54,7 +46,7 @@ function signUp(view){
             }
         }
     };
-    console.log(formData);
+    formData = "firstname=" + firstname + "&familyname=" + familyname + "&gender=" + gender + "&city=" +city + "&country=" + country + "&email=" + email + "&pwd=" + pwd;
     xmlhttp.send(formData);
 }
 
