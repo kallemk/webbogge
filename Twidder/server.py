@@ -11,7 +11,7 @@ app.secret_key = "kallemarskit"
 @app.route('/')
 @app.route('/index')
 def index():
-    return app.send_static_file('client.html')
+    return app.send_static_file('newclient.html')
 
 
 @app.route('/sign_in', methods=['POST'])
@@ -25,8 +25,8 @@ def server_sign_in():
 @app.route('/sign_up', methods=['POST'])
 def server_sign_up():
     """Receives sing-in information and sends it to functions."""
-    email = request.form['email']
-    password = request.form['password']
+    email = request.form['signup-email']
+    password = request.form['signup-pwd']
     firstname = request.form['firstname']
     familyname = request.form['familyname']
     gender = request.form['gender']
