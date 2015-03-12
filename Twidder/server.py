@@ -1,10 +1,10 @@
 from flask import request
-
+from gevent.wsgi import WSGIServer
+from geventwebsocket.handler import WebSocketHandler
 from Twidder.functions import *
 
 
 app = Flask(__name__, static_url_path='/static')
-
 app.secret_key = "kallemarskit"
 
 
@@ -109,4 +109,6 @@ def server_init_db():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    #app.run(debug=True)
+    http_server = WSGIServer(('', 5000), app, handler_class=WebSocketHandler)
+    http_server.serve_forever()
