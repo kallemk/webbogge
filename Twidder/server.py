@@ -8,6 +8,7 @@ app = Flask(__name__, static_url_path='/static')
 app.secret_key = "kallemarskit"
 
 
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -26,7 +27,7 @@ def server_sign_in():
 def server_sign_up():
     """Receives sing-in information and sends it to functions."""
     email = request.form['email']
-    password = request.form['pwd']
+    password = request.form['password']
     firstname = request.form['firstname']
     familyname = request.form['familyname']
     gender = request.form['gender']
@@ -105,6 +106,17 @@ def server_test_db():
 def server_init_db():
     """Function that inits the database"""
     init_db_function()
+    return "A new database has been set up!"
+
+@app.route('/get_sessions')
+def server_get_sessions():
+    """Function that returns the sessions"""
+    return "get_sessions()"
+
+@app.route('/clear_sessions')
+def server_clear_sessions():
+    """Function that clears the sessions"""
+    #clear_sessions()
     return "A new database has been set up!"
 
 

@@ -19,16 +19,16 @@
 				<div class="right-box">
 					<div class="login">
 						<h3>Login here!</h3>
-						<form name="log-in" id="log-in" method="POST" action="javascript:signIn(welcomeviewAlerts)">
+						<form name="log-in" id="log-in" method="POST">
 							<div class="form-group">
 								<label for="email">Email</label>
 								<input type="email" name="email" id="email" required>
 							</div>
 							<div class="form-group">
 								<label for="pwd">Password</label>
-								<input type="password" name="pwd" id="pwd" required>
+								<input type="password" name="password" id="password" required>
 							</div>
-							<input type="submit" value="Login" class="form-button">
+							<input type="button" value="Login" class="form-button" onclick="signIn(welcomeviewAlerts)">
 						</form>
 					</div>
 					<div class="signup">
@@ -163,7 +163,6 @@
 								</div>
 								<input type="submit" value="Change Pasword" class="form-button" id="change-pwd-button">
 							</form>
-							<button type="button" class="form-button" onclick="signOut(profileviewAlerts)" id="sign-out-button">Sign out</button>
 						</div>
 					</div>
 				</div>
@@ -177,6 +176,9 @@
 					</li>
 					<li>
 						<button type="button" class="form-button" id="account-button" onclick="changePanel(account, browse, home, profileviewAlerts)">Account</button>
+					</li>
+					<li>
+					    <button type="button" class="form-button" onclick="signOut(profileviewAlerts)" id="sign-out-button">Sign out</button>
 					</li>
 					</ul>
 					<div class="logo" id="tab-box-logo">
