@@ -7,7 +7,12 @@ from Twidder.functions import *
 app = Flask(__name__, static_url_path='/static')
 app.secret_key = "kallemarskit"
 
-
+#TODO
+##Array to store python dictionary. [{}], global
+##Dictionary containing email and conn
+##Signin socket (should check sign_out_socket)
+##sign_out_socket where the row in the dictionary with certain email is removed
+##Remove socket
 
 @app.route('/')
 @app.route('/index')
@@ -15,12 +20,22 @@ def index():
     return app.send_static_file('newclient.html')
 
 
-@app.route('/sign_in', methods=['POST'])
+@app.route('/sign_in', methods=['POST', 'GET'])
 def server_sign_in():
     """Signs the user in"""
-    email = request.form['email']
-    password = request.form['password']
-    return sign_in(email, password)
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        return sign_in(email, password)
+
+    if request.environ.get('wsgi.websocket'):
+        print("hej")
+        ws = request.environ['wsgi.websocket']
+        while True:
+            message = ws.receive()
+            print(message)
+            ws.send(message)
+    return
 
 
 @app.route('/sign_up', methods=['POST'])
