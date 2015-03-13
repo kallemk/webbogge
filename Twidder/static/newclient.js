@@ -33,9 +33,10 @@ var socketDriver = function(){
     };
     ws.onmessage = function (response) {
         if(response.data === 'logout'){
+            displayUserAlerts("You have been logged in somewhere else.");
             signOut();
         }else{
-            console.log('detta gick inte som tankt')
+            console.log('Something is wrong')
         }
     };
 

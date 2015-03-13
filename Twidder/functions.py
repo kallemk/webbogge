@@ -1,11 +1,7 @@
 import math
 import random
-import json
-
 from flask import jsonify, session
-
 from Twidder.database_helper import *
-
 
 def sign_in(email, password):
     if email_check_db(email) and password_check_db(email, password):
@@ -190,12 +186,10 @@ def password_validation(pwd):
     else:
         return True
 
-def sign_out_socket(connected_user, socket_storage):
+def check_socket_status(connected_user, socket_storage):
     counter = 0
     for i in socket_storage:
         if i['email'] == connected_user.get('email'):
-            print(counter)
-            print(i)
             socket_connection = i['connection']
             socket_connection.send('logout')
             socket_storage.pop(counter)

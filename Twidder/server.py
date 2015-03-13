@@ -2,16 +2,9 @@ from flask import request, session
 from gevent.wsgi import WSGIServer
 from geventwebsocket.handler import WebSocketHandler
 from Twidder.functions import *
-import json
 
 app = Flask(__name__, static_url_path='/static')
 app.secret_key = "kallemarskit"
-
-#TODO
-##Dictionary containing email and conn
-##Signin socket (should check sign_out_socket)
-##sign_out_socket where the row in the dictionary with certain email is removed
-##Remove socket
 
 socket_storage = []
 
@@ -33,16 +26,12 @@ def server_sign_in():
         ws = request.environ['wsgi.websocket']
         while True:
             token = ws.receive()
-            #ws.send(token)
             email = str(get_user_email_by_token(token))
             connected_user = {'email': email, 'connection': ws}
             global socket_storage
-            sign_out_socket(connected_user, socket_storage)
-            print("sign out socket done")
+            check_socket_status(connected_user, socket_storage)
             socket_storage.append(connected_user)
-            print(socket_storage)
         return ""
-
 
 @app.route('/sign_up', methods=['POST'])
 def server_sign_up():
