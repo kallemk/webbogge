@@ -5,26 +5,19 @@
 	margin: 100px auto 0 auto;
 }
 
-.user-alerts{
-	width: 600px;
-	height: 30px;
-	background: green;
-	margin: 100px auto 10px auto;
-}
-
 #alert {
     width: 600px;
     height: 30px;
     margin: 5px auto;
-    outline: 1px solid black;
     display: none;
     background-color: orangered;
 }
 
 #alertMessage {
     margin: 5px auto;
-    padding-left: 5px;
-    display: inline-block;
+    padding-top: 5px;
+    text-align: center;
+    /*display: inline-block;*/
 }
 
 .left-box{

@@ -1,5 +1,6 @@
 displayView = function(currentView){
-    $('body').html(document.getElementById(currentView).text);
+    document.getElementById("container").innerHTML = document.getElementById(currentView).innerHTML;
+    //$('body').html(document.getElementById(currentView).text);
     if(currentView === "profileview"){
     	showMyInformation();
     	setWallContent();
