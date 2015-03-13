@@ -2,7 +2,7 @@
 .main-box{
 	height: 400px;
 	width: 600px;
-	margin: 0 auto 0 auto;
+	margin: 100px auto 0 auto;
 }
 
 .user-alerts{
@@ -12,16 +12,19 @@
 	margin: 100px auto 10px auto;
 }
 
-#profileviewAlerts{
-	background-color: 1a56bb;
+#alert {
+    width: 600px;
+    height: 30px;
+    margin: 5px auto;
+    outline: 1px solid black;
+    display: none;
+    background-color: orangered;
 }
 
-#welcomeviewAlerts{
-	background-color: 1a56bb;
-}
-p#welcomeview-alert-text, p#profileview-alert-text{
-	padding-top: 7px;
-	text-align: center;
+#alertMessage {
+    margin: 5px auto;
+    padding-left: 5px;
+    display: inline-block;
 }
 
 .left-box{

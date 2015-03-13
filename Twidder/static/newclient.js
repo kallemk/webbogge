@@ -32,7 +32,7 @@ var socketDriver = function(){
     };
     ws.onmessage = function (response) {
         if(response.data === 'logout'){
-            signOut(document.getElementById(profileviewAlerts));
+            signOut();
         }else{
             console.log('detta gick inte som tankt')
         }
@@ -60,7 +60,7 @@ var callbackPost = function(method, url, requestHeader, requestHeaderValue, para
 };
 
 
-var signUp = function(view){
+var signUp = function(){
     console.log("Starting signup");
 
     var form = document.getElementById("sign-up");
@@ -74,7 +74,7 @@ var signUp = function(view){
     var password2 = form[7].value;
 
 
-    if (signupValidation(view, password, password2)){
+    if (signupValidation(password, password2)){
         var formData = "firstname=" + firstname + "&familyname=" + familyname + "&gender=" + gender + "&city=" +city + "&country=" + country + "&email=" + email + "&password=" + password;
 
         callbackPost("POST", "sign_up", "Content-type", "application/x-www-form-urlencoded", formData, function(){
@@ -82,19 +82,19 @@ var signUp = function(view){
             console.log(this);
             if (this.success){
                 console.log("success");
-                displayUserAlerts(this.message, view, "welcomeview");
+                displayUserAlerts(this.message);
 		        form.reset();
                 //setToken(response.data);
                 //window.onload();
             }else{
                 console.log("No success");
-                displayUserAlerts(this.message, view, "welcomeview");
+                displayUserAlerts(this.message);
             }
         });
     }
 };
 
-function signIn(view){
+function signIn(){
     console.log("Starting signin");
 
     var form = document.getElementById("log-in");
@@ -117,13 +117,13 @@ function signIn(view){
 
         }else{
             console.log("No success");
-            displayUserAlerts(this.message, view, "welcomeview");
+            displayUserAlerts(this.message);
 		    form.reset();
         }
     });
 }
 
-function signOut(view){
+function signOut(){
     console.log("Starting signout");
 	var token = getToken();
     console.log(token);
@@ -139,7 +139,7 @@ function signOut(view){
 
         }else{
             console.log("No success");
-            displayUserAlerts(this.message, view, "profileview");
+            displayUserAlerts(this.message);
         }
     });
 }
@@ -160,13 +160,13 @@ function showMyInformation(){
     });
 }
 
-var signupValidation = function(view, pwd1, pwd2){
+var signupValidation = function(pwd1, pwd2){
 	var x = 5; //Set the minimum character length of the password
 	if(pwd1!=pwd2){
-		displayUserAlerts("Both password fields must be the same", view, "welcomeview");
+		displayUserAlerts("Both password fields must be the same");
 		return false;
 	}else if ((pwd1.length || pwd2.length) < x){
-		displayUserAlerts("The password must contain at least " + x + " characters", view, "welcomeview");
+		displayUserAlerts("The password must contain at least " + x + " characters");
 		return false;
 	}else{
 	    return true;
@@ -176,8 +176,7 @@ var signupValidation = function(view, pwd1, pwd2){
 /*This function uses the input from the tab buttons to interpret
 which tab that is the one that should be shown. The function changes
 the style of the different div tags*/
-function changePanel(active, firstInactive, secondInactive, view){
-	eraseUserAlerts(view, "profileview");
+function changePanel(active, firstInactive, secondInactive){
 
 	active.style.display = 'block';
 	firstInactive.style.display = 'none';
@@ -190,19 +189,19 @@ function changePanel(active, firstInactive, secondInactive, view){
 	}
 }
 
-function changePassword(view){
+function changePassword(){
 	x = 5;
 	var oldPassword = document.getElementById('old-pwd').value;
 	var newPassword = document.getElementById('new-pwd').value;
 	var newPassword2 = document.getElementById('new-pwd2').value;
 	var formData = "old_pwd=" + oldPassword + "&new_pwd=" + newPassword + "&token=" + getToken();
 	if(newPassword!=newPassword2){
-		displayUserAlerts("Both new password fields must be the same",view, "profileview");
+		displayUserAlerts("Both new password fields must be the same");
 	}else if ((newPassword.length || newPassword2.length) < x){
-				displayUserAlerts("The  new password must contain at least " + x + " characters",view, "profileview");
+				displayUserAlerts("The  new password must contain at least " + x + " characters");
 	}else{
         callbackPost("POST", "change_password", "Content-type", "application/x-www-form-urlencoded", formData, function(){
-            displayUserAlerts(this.message, view, "profileview");
+            displayUserAlerts(this.message);
         });
 	}
 	//Erases the form content
@@ -214,7 +213,7 @@ function changePassword(view){
 /*The function interprets what has been written in the search
 field and sets up the user page*/
 
-function getUserByEmail(view){
+function getUserByEmail(){
     console.log("Starting getUserByEmail");
     var userEmail = document.getElementById('user-email').value;
 	var formData = "token=" + getToken() + "&email=" + userEmail;
@@ -223,15 +222,14 @@ function getUserByEmail(view){
 	callbackPost("POST", "get_user_by_email", "Content-type", "application/x-www-form-urlencoded", formData, function(){
         var userData = this;
         if(userData.success === true){
-            eraseUserAlerts(view, "profileview");
             setEmail(userEmail);
             showFriendInfo(userData);
             callbackPost("POST", "messages_by_email", "Content-type", "application/x-www-form-urlencoded", formData, function(){
                 var userMessages = this;
-                setUserWallContent(view, userMessages);
+                setUserWallContent(userMessages);
             });
         }else{
-            displayUserAlerts(userData.message, view, "profileview");
+            displayUserAlerts(userData.message);
             document.getElementById('user-email').value = "";
         }
     });
@@ -240,22 +238,21 @@ function getUserByEmail(view){
 /*The function interprets the information of the posting
 textarea and sends it to the function that appends the
 post content on the wall*/
-function getUserPost(view){
+function getUserPost(){
 	var token = getToken();
 	var tokenData = "token=" + token;
 	var postContent = document.getElementById('to-user-wall').value;
 	var email = getEmail();
 	if(postContent === ""){
-		displayUserAlerts("Write something!", view, "profileview");
+		displayUserAlerts("Write something!");
 	}else if(email === null || email === "undefined"){
-		displayUserAlerts("You need to choose a user!", view, "profileview");
+		displayUserAlerts("You need to choose a user!");
 		document.getElementById('to-user-wall').value = "";
 	}else{
-		eraseUserAlerts(view, "profileview");
 		var postData = "token=" + token + "&message=" + postContent + "&email_wall=" + email + "&email=" + email;
 
 		callbackPost("POST", "post_message", "Content-type", "application/x-www-form-urlencoded", postData, function(){
-		    displayUserAlerts(this.message, view, "profileview");
+		    displayUserAlerts(this.message);
             if(this.success){
                 newestPost("messages_by_email", postData, "#user-wall", "to-user-wall");
             }
@@ -266,18 +263,17 @@ function getUserPost(view){
 /*The function interprets the information of the posting
 textarea and sends it to the function that appends the
 post content on the wall*/
-function getMyPost(view){
+function getMyPost(){
 	var token = getToken();
 	var tokenData = "token=" + token;
 	var postContent = document.getElementById('to-my-wall').value;
 	if(postContent === ""){
-		displayUserAlerts("Write something!", view, "profileview");
+		displayUserAlerts("Write something!");
 	}else{
-		eraseUserAlerts(view, "profileview");
 		var postData = "token=" + token + "&message=" + postContent + "&email_wall=";
 
 		callbackPost("POST", "post_message", "Content-type", "application/x-www-form-urlencoded", postData, function(){
-		    displayUserAlerts(this.message, view, "profileview");
+		    displayUserAlerts(this.message);
 	        if(this.success){
                 newestPost("messages_by_token", postData, "#my-wall", "to-my-wall");
             }
@@ -320,8 +316,8 @@ function setWallContent(){
 
 /*The function sets up the content of the searched users wall*/
 
-function setUserWallContent(view, userMessages){
-    console.log("Strating setuserwallcontent");
+function setUserWallContent(userMessages){
+    console.log("Starting setuserwallcontent");
 	$("#user-message-wall textarea").empty();
     for (i = (userMessages.data.length -1); i > -1; i--) {
         $('#user-wall').append(userMessages.data[i].email_sender + " says:" + "\n");
@@ -343,26 +339,12 @@ function showFriendInfo(user){
 	document.getElementById('user-email').value = "";
 }
 
-/*The function appends the current alert message on the appropriate view*/
-function displayUserAlerts(message, view, state){
-	if(state === "welcomeview"){
-		$("#welcomeview-alert-text").empty();
-		$('#welcomeview-alert-text').append(message);
-	}else{
-		$("#profileview-alert-text").empty();
-		$('#profileview-alert-text').append(message);
-	}
-	view.style.backgroundColor = "#B74934";
-}
-
-/*The function erases all non relevant alerts*/
-function eraseUserAlerts(view, state){
-	if(state === "welcomeview"){
-		$("#welcomeview-alert-text").empty();
-	}else{
-		$("#profileview-alert-text").empty();
-	}
-	view.style.backgroundColor = "1a56bb";
+/*The function appends the current alert message*/
+function displayUserAlerts(message){
+	var alertBox = document.getElementById('alert');
+    alertBox.style.display = "block";
+    document.getElementById("alertMessage").innerHTML = message;
+    setTimeout(function(){alertBox.style.display = "none";}, 3000);
 }
 
 /*The functions below are used to make a quick call to
