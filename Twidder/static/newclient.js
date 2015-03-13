@@ -2,7 +2,7 @@ displayView = function(currentView){
     $('body').html(document.getElementById(currentView).text);
     if(currentView === "profileview"){
     	showMyInformation();
-    	//setWallContent();
+    	setWallContent();
     }
 };
 
@@ -17,7 +17,7 @@ window.onload = function(){
 };
 
 var callbackPost = function(method, url, requestHeader, requestHeaderValue, param,  callback){
-    console.log("Starting callbackFunction");
+    console.log("Starting callbackPost");
     var xmlhttp;
     xmlhttp = new XMLHttpRequest();
     xmlhttp.open(method, url, "true");
@@ -136,23 +136,15 @@ function signOut(view){
 /*The function appends the logged in user's info on the home tab*/
 function showMyInformation(){
     console.log("Starting showMyInformation");
-	var token = getToken();
-	console.log(token);
-	var tokenData = "token=" + token;
+	var tokenData = "token=" + getToken();
 
     callbackPost("POST", "get_user_by_token", "Content-type", "application/x-www-form-urlencoded", tokenData, function(){
-        console.log("This displayed:");
-        console.log(this.data);
         if (this.success){
-            console.log("success");
             $('#show-name').append(this.data.firstname + " " + this.data.familyname + "!");
             $('#show-email').append(this.data.email);
             $('#show-gender').append(this.data.gender);
             $('#show-city').append(this.data.city);
             $('#show-country').append(this.data.country);
-
-        }else{
-            console.log("No success");
         }
     });
 }
@@ -192,19 +184,13 @@ function changePassword(view){
 	var oldPassword = document.getElementById('old-pwd').value;
 	var newPassword = document.getElementById('new-pwd').value;
 	var newPassword2 = document.getElementById('new-pwd2').value;
-	console.log(newPassword);
-	var token = getToken();
-	var formData = "old_pwd=" + oldPassword + "&new_pwd=" + newPassword + "&token=" + token;
+	var formData = "old_pwd=" + oldPassword + "&new_pwd=" + newPassword + "&token=" + getToken();
 	if(newPassword!=newPassword2){
 		displayUserAlerts("Both new password fields must be the same",view, "profileview");
 	}else if ((newPassword.length || newPassword2.length) < x){
 				displayUserAlerts("The  new password must contain at least " + x + " characters",view, "profileview");
 	}else{
-	    var formData = "old_pwd=" + oldPassword + "&new_pwd=" + newPassword + "&token=" + token;
-
         callbackPost("POST", "change_password", "Content-type", "application/x-www-form-urlencoded", formData, function(){
-            console.log("This displayed:");
-            console.log(this.data);
             displayUserAlerts(this.message, view, "profileview");
         });
 	}
@@ -213,40 +199,124 @@ function changePassword(view){
 	pwdForm.reset();
 }
 
-//Not ready with this yet
 
 /*The function interprets what has been written in the search
 field and sets up the user page*/
-/*
+
 function getUserByEmail(view){
     console.log("Starting getUserByEmail");
-	var token = getToken();
-	var userEmail = document.getElementById('user-email').value;
-	var formData = "token=" + token + "&email" + userEmail;
+    var userEmail = document.getElementById('user-email').value;
+	var formData = "token=" + getToken() + "&email=" + userEmail;
+	console.log(formData);
 
 	callbackPost("POST", "get_user_by_email", "Content-type", "application/x-www-form-urlencoded", formData, function(){
-        console.log("This displayed:");
-        console.log(this.data);
+        var userData = this;
+        if(userData.success === true){
+            eraseUserAlerts(view, "profileview");
+            setEmail(userEmail);
+            showFriendInfo(userData);
+            callbackPost("POST", "messages_by_email", "Content-type", "application/x-www-form-urlencoded", formData, function(){
+                var userMessages = this;
+                setUserWallContent(view, userMessages);
+            });
+        }else{
+            displayUserAlerts(userData.message, view, "profileview");
+            document.getElementById('user-email').value = "";
+        }
+    });
+}
 
-        callbackPost("POST", "messages_by_email", "Content-type", "application/x-www-form-urlencoded", formData, function(){
-            console.log("This displayed:");
-            console.log(this.data);
+/*The function interprets the information of the posting
+textarea and sends it to the function that appends the
+post content on the wall*/
+function getUserPost(view){
+	var token = getToken();
+	var tokenData = "token=" + token;
+	var postContent = document.getElementById('to-user-wall').value;
+	var email = getEmail();
+	if(postContent === ""){
+		displayUserAlerts("Write something!", view, "profileview");
+	}else if(email === null || email === "undefined"){
+		displayUserAlerts("You need to choose a user!", view, "profileview");
+		document.getElementById('to-user-wall').value = "";
+	}else{
+		eraseUserAlerts(view, "profileview");
+		var postData = "token=" + token + "&message=" + postContent + "&email_wall=" + email + "&email=" + email;
 
+		callbackPost("POST", "post_message", "Content-type", "application/x-www-form-urlencoded", postData, function(){
+		    displayUserAlerts(this.message, view, "profileview");
+            if(this.success){
+                newestPost("messages_by_email", postData, "#user-wall", "to-user-wall");
+            }
         });
+	}
+}
+
+/*The function interprets the information of the posting
+textarea and sends it to the function that appends the
+post content on the wall*/
+function getMyPost(view){
+	var token = getToken();
+	var tokenData = "token=" + token;
+	var postContent = document.getElementById('to-my-wall').value;
+	if(postContent === ""){
+		displayUserAlerts("Write something!", view, "profileview");
+	}else{
+		eraseUserAlerts(view, "profileview");
+		var postData = "token=" + token + "&message=" + postContent + "&email_wall=";
+
+		callbackPost("POST", "post_message", "Content-type", "application/x-www-form-urlencoded", postData, function(){
+		    displayUserAlerts(this.message, view, "profileview");
+	        if(this.success){
+                newestPost("messages_by_token", postData, "#my-wall", "to-my-wall");
+            }
+        });
+	}
+}
+
+
+/*This function puts the most recent post on the signed in users
+wall or the searched users wall*/
+
+function newestPost(messageFunction, emailData, messageWall, postWall){
+    console.log("Starting newest post");
+
+    callbackPost("POST", messageFunction, "Content-type", "application/x-www-form-urlencoded", emailData, function(){
+        console.log("messages och token displayed:");
+        var currentValue = $(messageWall).text();
+        var pos = this.data.length - 1;
+        var author = (this.data[pos].email_sender + " says:" + "\n");
+        var newValue = (author + this.data[pos].message + "\n" + currentValue);
+        $(messageWall).val(newValue);
+        document.getElementById(postWall).value = "";
     });
 
-	var userData = serverstub.getUserDataByEmail(token, userEmail);
-	var userMessages = serverstub.getUserMessagesByEmail(token, userEmail);
-	if(userData.success === true){
-		eraseUserAlerts(view, "profileview");
-		setEmail(userEmail);
-		setUserWallContent();
-		showFriendInfo(userData);
-	}else{
-		displayUserAlerts(userData.message, view, "profileview");
-		document.getElementById('user-email').value = "";
-	}
-}*/
+}
+
+/*The function sets up the content of the logged in users wall*/
+function setWallContent(){
+	$("#message-wall textarea").empty();
+	var tokenData = "token=" + getToken();
+	callbackPost("POST", "messages_by_token", "Content-type", "application/x-www-form-urlencoded", tokenData, function(){
+        if (this.success){
+            for (i = (this.data.length -1); i > -1; i--) {
+                $('#my-wall').append(this.data[i].email_sender + " says:" + "\n");
+                $('#my-wall').append(this.data[i].message + "\n");
+            }
+	    }
+	});
+}
+
+/*The function sets up the content of the searched users wall*/
+
+function setUserWallContent(view, userMessages){
+    console.log("Strating setuserwallcontent");
+	$("#user-message-wall textarea").empty();
+    for (i = (userMessages.data.length -1); i > -1; i--) {
+        $('#user-wall').append(userMessages.data[i].email_sender + " says:" + "\n");
+        $('#user-wall').append(userMessages.data[i].message + "\n");
+    }
+}
 
 /*The function appends the information for the user
 that has been searched for*/
