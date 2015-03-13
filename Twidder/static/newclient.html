@@ -113,7 +113,7 @@
 									<div class="form-group" id="search-field">
 										<label for="user-email" id="search-label">Find user:</label>
 										<input type="email" name="user-email" id="user-email" required>
-										<input type="button" onclick="viewUser(profileviewAlerts)" value="View user" class="form-button" id="view-user-button">
+										<input type="button" onclick="getUserByEmail(profileviewAlerts)" value="View user" class="form-button" id="view-user-button">
 									</div>
 								</form>
 							</div>
@@ -148,7 +148,7 @@
 						</div>
 						<div id="account">
 						<p>Change Password</p>
-							<form name="change-password" action="javascript:changePassword(profileviewAlerts)" id="change-password">
+							<form name="change-password" id="change-password">
 								<div class="form-group">
 									<label for="old-pwd" class="pwd-label">Current password:</label>
 									<input type="password" name="old-pwd" id="old-pwd" required>
@@ -161,7 +161,7 @@
 									<label for="new-pwd2" class="pwd-label">Repeat password:</label>
 									<input type="password" name="new-pwd2" id="new-pwd2" required>
 								</div>
-								<input type="submit" value="Change Pasword" class="form-button" id="change-pwd-button">
+								<input type="button" value="Change Pasword" class="form-button" id="change-pwd-button" onclick="changePassword(profileviewAlerts)">
 							</form>
 						</div>
 					</div>

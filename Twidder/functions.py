@@ -93,12 +93,12 @@ def get_user_data_by_email(token, email):
             #Fetch the specific user from the database
             user = get_user_db(email)
             #Setting up a python dictionary for json to interpret
-            user_information = [{'email': user[0],
+            user_information = {'email': user[0],
                                   'firstname': user[2],
                                   'familyname': user[3],
                                   'gender': user[4],
                                   'city': user[5],
-                                  'country': user[6]}]
+                                  'country': user[6]}
             return jsonify(success=True,
                            message="User data retrieved",
                            data=user_information)

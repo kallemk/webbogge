@@ -70,7 +70,8 @@ def server_change_password():
 @app.route('/get_user_by_token', methods=['POST'])
 def server_get_user_by_token():
     token = request.form['token']
-    return get_user_data_by_token(token)
+    data = get_user_data_by_token(token)
+    return data
 
 
 @app.route('/get_user_by_email', methods=['POST'])
