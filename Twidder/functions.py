@@ -1,5 +1,6 @@
 import math
 import random
+import json
 
 from flask import jsonify, session
 
@@ -84,6 +85,13 @@ def get_user_data_by_token(token):
         return jsonify(success=False,
                        message="You are not signed in.")
 
+def get_user_email_by_token(token):
+    if session_exists(token):
+        email = session[token]
+        return email
+    else:
+        return jsonify(success=False,
+                       message="Couldn't find email")
 
 def get_user_data_by_email(token, email):
     """If there is an active session and the email that is searched for
@@ -182,6 +190,16 @@ def password_validation(pwd):
     else:
         return True
 
+def sign_out_socket(connected_user, socket_storage):
+    counter = 0
+    for i in socket_storage:
+        if i['email'] == connected_user.get('email'):
+            print(counter)
+            print(i)
+            socket_connection = i['connection']
+            socket_connection.send('logout')
+            socket_storage.pop(counter)
+        counter += 1
 
 def session_exists(token):
     """Short function that checks if there is a session for the token.

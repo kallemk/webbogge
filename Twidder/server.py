@@ -1,18 +1,19 @@
-from flask import request
+from flask import request, session
 from gevent.wsgi import WSGIServer
 from geventwebsocket.handler import WebSocketHandler
 from Twidder.functions import *
-
+import json
 
 app = Flask(__name__, static_url_path='/static')
 app.secret_key = "kallemarskit"
 
 #TODO
-##Array to store python dictionary. [{}], global
 ##Dictionary containing email and conn
 ##Signin socket (should check sign_out_socket)
 ##sign_out_socket where the row in the dictionary with certain email is removed
 ##Remove socket
+
+socket_storage = []
 
 @app.route('/')
 @app.route('/index')
@@ -29,13 +30,18 @@ def server_sign_in():
         return sign_in(email, password)
 
     if request.environ.get('wsgi.websocket'):
-        print("hej")
         ws = request.environ['wsgi.websocket']
         while True:
-            message = ws.receive()
-            print(message)
-            ws.send(message)
-    return
+            token = ws.receive()
+            #ws.send(token)
+            email = str(get_user_email_by_token(token))
+            connected_user = {'email': email, 'connection': ws}
+            global socket_storage
+            sign_out_socket(connected_user, socket_storage)
+            print("sign out socket done")
+            socket_storage.append(connected_user)
+            print(socket_storage)
+        return ""
 
 
 @app.route('/sign_up', methods=['POST'])
@@ -53,8 +59,9 @@ def server_sign_up():
 @app.route('/sign_out', methods=['POST'])
 def server_sign_out():
     """Receives the token for the user that will be signed out"""
-    token = request.form['token']
-    return sign_out(token)
+    if request.method == 'POST':
+        token = request.form['token']
+        return sign_out(token)
 
 
 @app.route('/change_password', methods=['POST'])

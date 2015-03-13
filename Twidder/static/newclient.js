@@ -16,6 +16,33 @@ window.onload = function(){
     }
 };
 
+var socketDriver = function(){
+    var loc = window.location, new_uri;
+        if (loc.protocol === "https:") {
+            new_uri = "wss:";
+        } else {
+            new_uri = "ws:";
+        }
+    new_uri += "//" + loc.host;
+    new_uri += loc.pathname + "sign_in";
+    console.log(new_uri);
+    var ws = new WebSocket(new_uri);
+    ws.onopen = function(){
+        ws.send(localStorage.getItem('myToken'));
+    };
+    ws.onmessage = function (response) {
+        if(response.data === 'logout'){
+            signOut(document.getElementById(profileviewAlerts));
+        }else{
+            console.log('detta gick inte som tankt')
+        }
+    };
+
+    ws.onclose = function () {
+        console.log("The connections has closed.");
+    };
+};
+
 var callbackPost = function(method, url, requestHeader, requestHeaderValue, param,  callback){
     console.log("Starting callbackFunction");
     var xmlhttp;
@@ -78,23 +105,6 @@ function signIn(view){
     console.log(formData);
 
 
-    var loc = window.location, new_uri;
-        if (loc.protocol === "https:") {
-            new_uri = "wss:";
-        } else {
-            new_uri = "ws:";
-        }
-    new_uri += "//" + loc.host;
-    new_uri += loc.pathname + "sign_in";
-    console.log(new_uri);
-    var ws = new WebSocket(new_uri);
-    ws.onopen = function(){
-        ws.send('suger');
-    };
-    ws.onmessage = function (msg) {
-        console.log(msg.data);
-    };
-
     callbackPost("POST", "sign_in", "Content-type", "application/x-www-form-urlencoded", formData, function(){
         console.log("This displayed:");
         console.log(this);
@@ -102,6 +112,7 @@ function signIn(view){
             console.log("success, Token:");
             console.log(this.data);
             setToken(this.data);
+            socketDriver();
             window.onload();
 
         }else{
