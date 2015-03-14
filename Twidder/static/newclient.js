@@ -32,7 +32,7 @@ var socketDriver = function(){
         ws.send(localStorage.getItem('myToken'));
     };
     ws.onmessage = function (response) {
-        if(response.data === 'logout'){
+        if(response.data == getToken()){
             displayUserAlerts("You have been logged in somewhere else.");
             signOut();
         }else{

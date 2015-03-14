@@ -190,10 +190,13 @@ def check_socket_status(connected_user, socket_storage):
     counter = 0
     for i in socket_storage:
         if i['email'] == connected_user.get('email'):
+            #print("Anvandare att ta bort:")
+            #print(i)
             socket_connection = i['connection']
-            socket_connection.send('logout')
+            socket_connection.send(i['token'])
             socket_storage.pop(counter)
         counter += 1
+    return socket_storage
 
 def session_exists(token):
     """Short function that checks if there is a session for the token.

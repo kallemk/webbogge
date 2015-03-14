@@ -27,10 +27,12 @@ def server_sign_in():
         while True:
             token = ws.receive()
             email = str(get_user_email_by_token(token))
-            connected_user = {'email': email, 'connection': ws}
+            connected_user = {'email': email, 'connection': ws, 'token': token}
             global socket_storage
-            check_socket_status(connected_user, socket_storage)
+            socket_storage = check_socket_status(connected_user, socket_storage)
             socket_storage.append(connected_user)
+            #print("Listan ser ut som foljer:")
+            #print(socket_storage)
         return ""
 
 @app.route('/sign_up', methods=['POST'])
