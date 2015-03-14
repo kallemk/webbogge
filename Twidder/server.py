@@ -22,6 +22,7 @@ def server_sign_in():
         password = request.form['password']
         return sign_in(email, password)
 
+    """Handles the websocket connection"""
     if request.environ.get('wsgi.websocket'):
         ws = request.environ['wsgi.websocket']
         while True:
