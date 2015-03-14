@@ -211,13 +211,25 @@ function changePassword(){
 	pwdForm.reset();
 }
 
+function refreshUser(){
+    console.log("Starting refreshUser");
+    var userEmail = document.getElementById('show-email2').innerHTML    ;
+    console.log(userEmail);
+    getUserByEmail(userEmail);
+}
+
+
+function getUser(){
+    console.log("Starting getUser");
+    var userEmail = document.getElementById('user-email').value;
+    console.log(userEmail);
+    getUserByEmail(userEmail);
+}
 
 /*The function interprets what has been written in the search
 field and sets up the user page*/
-
-function getUserByEmail(){
+function getUserByEmail(userEmail){
     console.log("Starting getUserByEmail");
-    var userEmail = document.getElementById('user-email').value;
 	var formData = "token=" + getToken() + "&email=" + userEmail;
 	console.log(formData);
 
@@ -228,6 +240,8 @@ function getUserByEmail(){
             showFriendInfo(userData);
             callbackPost("POST", "messages_by_email", "Content-type", "application/x-www-form-urlencoded", formData, function(){
                 var userMessages = this;
+                console.log(userMessages);
+                console.log(userMessages.data[0].message);
                 setUserWallContent(userMessages);
             });
         }else{
@@ -256,7 +270,13 @@ function getUserPost(){
 		callbackPost("POST", "post_message", "Content-type", "application/x-www-form-urlencoded", postData, function(){
 		    displayUserAlerts(this.message);
             if(this.success){
-                newestPost("messages_by_email", postData, "#user-wall", "to-user-wall");
+                document.getElementById("to-user-wall").value = "";
+                callbackPost("POST", "messages_by_email", "Content-type", "application/x-www-form-urlencoded", postData, function(){
+                    console.log(this);
+                    console.log(this.data);
+                    console.log(this.data.messages);
+                    setUserWallContent(this);
+                });
             }
         });
 	}
@@ -277,30 +297,14 @@ function getMyPost(){
 		callbackPost("POST", "post_message", "Content-type", "application/x-www-form-urlencoded", postData, function(){
 		    displayUserAlerts(this.message);
 	        if(this.success){
-                newestPost("messages_by_token", postData, "#my-wall", "to-my-wall");
+	            document.getElementById("to-my-wall").value = "";
+	            setWallContent();
             }
         });
 	}
 }
 
 
-/*This function puts the most recent post on the signed in users
-wall or the searched users wall*/
-
-function newestPost(messageFunction, emailData, messageWall, postWall){
-    console.log("Starting newest post");
-
-    callbackPost("POST", messageFunction, "Content-type", "application/x-www-form-urlencoded", emailData, function(){
-        console.log("messages och token displayed:");
-        var currentValue = $(messageWall).text();
-        var pos = this.data.length - 1;
-        var author = (this.data[pos].email_sender + " says:" + "\n");
-        var newValue = (author + this.data[pos].message + "\n" + currentValue);
-        $(messageWall).val(newValue);
-        document.getElementById(postWall).value = "";
-    });
-
-}
 
 /*The function sets up the content of the logged in users wall*/
 function setWallContent(){
@@ -320,9 +324,12 @@ function setWallContent(){
 
 function setUserWallContent(userMessages){
     console.log("Starting setuserwallcontent");
+    console.log(userMessages);
+    console.log(userMessages.data[0].message);
 	$("#user-message-wall textarea").empty();
     for (i = (userMessages.data.length -1); i > -1; i--) {
         $('#user-wall').append(userMessages.data[i].email_sender + " says:" + "\n");
+        console.log(userMessages.data[i].message);
         $('#user-wall').append(userMessages.data[i].message + "\n");
     }
 }

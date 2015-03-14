@@ -107,7 +107,7 @@
 									<div class="form-group" id="search-field">
 										<label for="user-email" id="search-label">Find user:</label>
 										<input type="email" name="user-email" id="user-email" required>
-										<input type="button" onclick="getUserByEmail()" value="View user" class="form-button" id="view-user-button">
+										<input type="button" onclick="getUser()" value="View user" class="form-button" id="view-user-button">
 									</div>
 								</form>
 							</div>
@@ -137,7 +137,7 @@
 							</div>
 							<div id="user-message-wall">
 								<textarea rows="9" cols="30" id="user-wall" readonly></textarea>
-								<input type="button" class="form-button" value="Refresh" onclick="setUserWallContent()">
+								<input type="button" class="form-button" value="Refresh" onclick="refreshUser()">
 							</div>
 						</div>
 						<div id="account">
