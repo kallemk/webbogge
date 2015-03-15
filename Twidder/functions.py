@@ -162,7 +162,8 @@ def post_message(token, message, email_wall):
     if session_exists(token):
         email_sender = session[token]
         if email_wall == "":
-            email_wall = email_sender
+            return jsonify(success=False,
+                           message="No such user")
         if email_check_db(email_wall):
             post_message_db(message, email_wall, email_sender)
             return jsonify(success=True,
@@ -173,6 +174,9 @@ def post_message(token, message, email_wall):
     else:
         return jsonify(success=False,
                        message="You are not signed in.")
+
+
+
 
 
 def password_validation(pwd):

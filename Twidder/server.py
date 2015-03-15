@@ -1,17 +1,37 @@
-from flask import request, session
+from flask import request, session, send_from_directory
 from gevent.wsgi import WSGIServer
 from geventwebsocket.handler import WebSocketHandler
 from Twidder.functions import *
+from werkzeug.utils import secure_filename
+import os
+
+
+PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
+UPLOAD_FOLDER = os.path.join(PROJECT_ROOT, 'uploads')
+print(UPLOAD_FOLDER)
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'mp4'])
 
 app = Flask(__name__, static_url_path='/static')
 app.secret_key = "kallemarskit"
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 socket_storage = []
+
+
 
 @app.route('/')
 @app.route('/index')
 def index():
     return app.send_static_file('newclient.html')
+
+
+@app.route('/count_sessions')
+def server_count_sessions():
+    """Function that counts the number of sessions"""
+    print("Fungerar")
+    sessions = len(socket_storage)
+    print(sessions)
+    return "hejhej"
 
 
 @app.route('/sign_in', methods=['POST', 'GET'])
@@ -20,6 +40,7 @@ def server_sign_in():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
+        print(email + password)
         return sign_in(email, password)
 
     """Handles the websocket connection"""
@@ -86,6 +107,48 @@ def server_post_message():
     message = request.form['message']
     email_wall = request.form['email_wall']
     return post_message(token, message, email_wall)
+
+
+@app.route('/upload_media', methods=['POST', 'GET'])
+def server_upload_media():
+    if request.method == 'POST':
+        print("post")
+        file = request.files['file']
+        #token = request.form['token']
+        #email_wall = request.form['email_wall']
+        return upload_media(file)
+    return'''
+    <!doctype html>
+    <title>Upload new File</title>
+    <h1>Upload new File</h1>
+    <form action="" method=post enctype=multipart/form-data>
+      <p><input type=file name=file>
+         <input type=submit value=Upload>
+    </form>
+    '''
+
+
+def upload_media(file):
+    if file and allowed_file(file.filename):
+        print("allowed")
+        filename = secure_filename(file.filename)
+        print("filename")
+        print(filename)
+        print(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        print("FUNGERAR")
+        return "FUNGERAR?!?!?!?!?"
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
+@app.route('/uploads/<filename>', methods=['POST', 'GET'])
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 
 
 @app.route('/messages_by_email', methods=['POST'])

@@ -76,7 +76,7 @@ var signUp = function(){
     var password2 = form[7].value;
 
 
-    if (signupValidation(password, password2)){
+    if (signupValidation(firstname, familyname, gender, city, country, email, password, password2)){
         var formData = "firstname=" + firstname + "&familyname=" + familyname + "&gender=" + gender + "&city=" +city + "&country=" + country + "&email=" + email + "&password=" + password;
 
         callbackPost("POST", "sign_up", "Content-type", "application/x-www-form-urlencoded", formData, function(){
@@ -162,9 +162,35 @@ function showMyInformation(){
     });
 }
 
-var signupValidation = function(pwd1, pwd2){
-	var x = 5; //Set the minimum character length of the password
-	if(pwd1!=pwd2){
+
+/* This function tests all the fields in the sign up form and returns false if something is missing.
+It returns true if the data provided in the form is correct*/
+var signupValidation = function(firstname, familyname, gender, city, country, email, pwd1, pwd2){
+    //Got this re string from http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
+    var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    var x = 5; //Set the minimum character length of the password
+    if(firstname == ""){
+        displayUserAlerts("Please fill in the first name field");
+        return false;
+    }else if(familyname == ""){
+        displayUserAlerts("Please fill in the last name field");
+        return false;
+    }else if(gender == ""){
+        displayUserAlerts("Please fill in the gender field");
+        return false;
+    }else if(city == ""){
+        displayUserAlerts("Please fill in the city field");
+        return false;
+    }else if(country == ""){
+        displayUserAlerts("Please fill in the country field");
+        return false;
+    }else if(email == ""){
+        displayUserAlerts("Please fill in the email field");
+        return false;
+    }else if(re.test(email) == false){
+        displayUserAlerts("Please enter a valid email");
+        return false;
+    }else if(pwd1!=pwd2){
 		displayUserAlerts("Both password fields must be the same");
 		return false;
 	}else if ((pwd1.length || pwd2.length) < x){
@@ -174,6 +200,7 @@ var signupValidation = function(pwd1, pwd2){
 	    return true;
 	}
 }
+
 
 /*This function uses the input from the tab buttons to interpret
 which tab that is the one that should be shown. The function changes
@@ -191,6 +218,9 @@ function changePanel(active, firstInactive, secondInactive){
 	}
 }
 
+/* This function is used to validate the change passwor form
+ and then calling the change_password route which returns sucess and a message
+ It also erases the form content*/
 function changePassword(){
 	x = 5;
 	var oldPassword = document.getElementById('old-pwd').value;
@@ -211,14 +241,17 @@ function changePassword(){
 	pwdForm.reset();
 }
 
+
+/* This function is used to provide the correct email form the userpage
+ for the getUserByEmail when refreshing the messages */
 function refreshUser(){
     console.log("Starting refreshUser");
-    var userEmail = document.getElementById('show-email2').innerHTML    ;
-    console.log(userEmail);
+    var userEmail = document.getElementById('show-email2').innerHTML;
     getUserByEmail(userEmail);
 }
 
-
+/* This function is used when the user profile will be shown.
+It gets the correct email and passes it to getUserByEmail*/
 function getUser(){
     console.log("Starting getUser");
     var userEmail = document.getElementById('user-email').value;
@@ -227,7 +260,8 @@ function getUser(){
 }
 
 /*The function interprets what has been written in the search
-field and sets up the user page*/
+field and sets up the user page.
+It is also used for refreshing the messages of a user*/
 function getUserByEmail(userEmail){
     console.log("Starting getUserByEmail");
 	var formData = "token=" + getToken() + "&email=" + userEmail;
@@ -258,7 +292,10 @@ function getUserPost(){
 	var token = getToken();
 	var tokenData = "token=" + token;
 	var postContent = document.getElementById('to-user-wall').value;
-	var email = getEmail();
+	//var email = getEmail();
+	var email = document.getElementById('show-email2').innerHTML;
+	console.log("Titta!");
+	console.log(email);
 	if(postContent === ""){
 		displayUserAlerts("Write something!");
 	}else if(email === null || email === "undefined"){
@@ -286,13 +323,13 @@ function getUserPost(){
 textarea and sends it to the function that appends the
 post content on the wall*/
 function getMyPost(){
-	var token = getToken();
-	var tokenData = "token=" + token;
 	var postContent = document.getElementById('to-my-wall').value;
 	if(postContent === ""){
 		displayUserAlerts("Write something!");
 	}else{
-		var postData = "token=" + token + "&message=" + postContent + "&email_wall=";
+        var token = getToken();
+        var email_wall = document.getElementById('show-email').innerHTML;
+		var postData = "token=" + token + "&message=" + postContent + "&email_wall=" + email_wall;
 
 		callbackPost("POST", "post_message", "Content-type", "application/x-www-form-urlencoded", postData, function(){
 		    displayUserAlerts(this.message);
@@ -375,3 +412,37 @@ function getEmail(){
 function setEmail(email){
 	localStorage.setItem("userEmail",email);
 }
+
+/* The following functions are used to drag and drop smileys */
+
+/* Used by elements that can be dragged */
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+/* Specifies what should happen when the element is dragged */
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+    var smiley = ev.dataTransfer.getData("text");
+    // Depending on which smiley is dragged, different proxy images will be shown
+    if (smiley == "smiley1"){
+        var img = document.createElement("img");
+        img.src = "static/img/smile.png";
+    }else if (smiley == "smiley2"){
+        var img = document.createElement("img");
+        img.src = "static/img/sad.png";
+    }else if (smiley == "smiley3"){
+        var img = document.createElement("img");
+        img.src = "static/img/happy.png";
+    }
+    ev.dataTransfer.setDragImage(img, 0, 0);
+}
+
+/* Specifies what should happen at the drop event */
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    // If there is something wiritten in the textare the smiley is added after the text.
+    ev.target.value += document.getElementById(data).children[0].innerHTML;
+}
+

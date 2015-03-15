@@ -16,7 +16,7 @@
 				<div class="right-box">
 					<div class="login">
 						<h3>Login here!</h3>
-						<form name="log-in" id="log-in" method="POST">
+						<form name="log-in" id="log-in" >
 							<div class="form-group">
 								<label for="email">Email</label>
 								<input type="email" name="email" id="email" required>
@@ -30,7 +30,7 @@
 					</div>
 					<div class="signup">
 						<h3>Sign up here!</h3>
-						<form id="sign-up" class="sign-up" method="POST">
+						<form id="sign-up" class="sign-up">
 							<div class="form-group">
 								<label for="firstname">First name</label>
 								<input type="text" name="firstname" id="firstname" required>
@@ -93,7 +93,7 @@
 							</div>
 							<div id="post-to-wall">
 								<p>What is on your mind?</p>
-								<textarea rows="2" cols="30" id="to-my-wall"></textarea>
+								<textarea rows="2" cols="30" id="to-my-wall" ondrop="drop(event)" ondragover="allowDrop(event)"></textarea>
 								<input type="button" class="form-button" value="Post To Wall" onclick="getMyPost()">
 							</div>
 							<div id="message-wall">
@@ -132,7 +132,7 @@
 							</div>
 							<div id="post-to-user-wall">
 								<p>Write on the user wall:</p>
-								<textarea rows="2" cols="30" id="to-user-wall"></textarea>
+								<textarea rows="2" cols="30" id="to-user-wall" ondrop="drop(event)" ondragover="allowDrop(event)"></textarea>
 								<input type="button" class="form-button" value="Post To Wall" onclick="getUserPost()">
 							</div>
 							<div id="user-message-wall">
@@ -179,6 +179,18 @@
 						<img src="static/img/logo.png">
 					</div>
 				</div>
+				<div class="smiley-box">
+				    <h2>Pick a smiley!</h2>
+                    <div class="smiley" id="smiley1" draggable="true" ondragstart="drag(event)">
+                        <p> :)</p>
+                    </div>
+                    <div class="smiley" id="smiley2" draggable="true" ondragstart="drag(event)">
+                        <p> :(</p>
+                    </div>
+                    <div class="smiley" id="smiley3" draggable="true" ondragstart="drag(event)">
+                        <p> :D</p>
+                    </div>
+                </div>
 			</div>
 		</script>
 		<title>Twidder</title>
@@ -191,3 +203,11 @@
         </div>
 	</body>
 </html>
+<!--
+<div class="video-box">
+    <video width="320" height="240" controls="" poster="uploads/stahl.jpg">
+        <source src="uploads/pitbull.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+-->
