@@ -1,9 +1,13 @@
 displayView = function(currentView){
     document.getElementById("script-container").innerHTML = document.getElementById(currentView).innerHTML;
-    //$('body').html(document.getElementById(currentView).text);
     if(currentView === "profileview"){
     	showMyInformation();
     	setWallContent();
+        var id = localStorage.getItem('activeTab');
+        changePanel();
+        document.getElementById(id).style.display = 'block';
+    }else if(currentView === "welcomeview"){
+        localStorage.setItem("activeTab",'home');
     }
 };
 
@@ -61,7 +65,6 @@ var callbackPost = function(method, url, requestHeader, requestHeaderValue, para
     };
 };
 
-
 var signUp = function(){
     console.log("Starting signup");
 
@@ -115,8 +118,8 @@ function signIn(){
             console.log(this.data);
             setToken(this.data);
             socketDriver();
+            window.history.pushState({}, '', '/home');
             window.onload();
-
         }else{
             console.log("No success");
             displayUserAlerts(this.message);
@@ -137,6 +140,7 @@ function signOut(){
         if (this.success){
             console.log("success");
             localStorage.removeItem('myToken');
+            window.history.replaceState(null,'','/');
             window.onload();
 
         }else{
@@ -205,18 +209,19 @@ var signupValidation = function(firstname, familyname, gender, city, country, em
 /*This function uses the input from the tab buttons to interpret
 which tab that is the one that should be shown. The function changes
 the style of the different div tags*/
-function changePanel(active, first, second, third){
+function changePanel(){
+    document.getElementById('account').style.display = 'none';
+    document.getElementById('browse').style.display = 'none';
+    document.getElementById('home').style.display = 'none';
+    document.getElementById('account').style.display = 'none';
+    document.getElementById('stats').style.display = 'none';
+}
 
-	active.style.display = 'block';
-	first.style.display = 'none';
-	second.style.display = 'none';
-    third.style.display = 'none';
-	//Makes sure that the text fields in the browse tab are erased
-	if(first === browse || second === browse || third === browse){
-		$("#friend-info p").empty();
-		$("#user-message-wall textarea").empty();
-		localStorage.removeItem("userEmail");
-	}
+/*Makes sure that the text fields in the browse tab are erased*/
+function clearBrowse(){
+    $("#friend-info p").empty();
+    $("#user-message-wall textarea").empty();
+    localStorage.removeItem("userEmail")
 }
 
 /* This function is used to validate the change passwor form
@@ -446,4 +451,36 @@ function drop(ev) {
     // If there is something wiritten in the textare the smiley is added after the text.
     ev.target.value += document.getElementById(data).children[0].innerHTML;
 }
+
+/* Page routing*/
+
+page('/browse', function(){
+    changePanel();
+    document.getElementById('browse').style.display = 'block';
+    localStorage.setItem("activeTab", 'browse');
+});
+
+page('/home', function(){
+    changePanel();
+    clearBrowse();
+    document.getElementById('home').style.display = 'block';
+    localStorage.setItem("activeTab", 'home');
+});
+
+page('/account', function(){
+    changePanel();
+    clearBrowse();
+    document.getElementById('account').style.display = 'block';
+    localStorage.setItem("activeTab", 'account');
+});
+
+page('/stats', function(){
+    changePanel();
+    clearBrowse();
+    document.getElementById('stats').style.display = 'block';
+    localStorage.setItem("activeTab", 'stats');
+
+});
+
+page.start();
 

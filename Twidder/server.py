@@ -1,4 +1,4 @@
-from flask import request, session, send_from_directory
+from flask import request, send_from_directory
 from gevent.wsgi import WSGIServer
 from geventwebsocket.handler import WebSocketHandler
 from Twidder.functions import *
@@ -18,12 +18,26 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 socket_storage = []
 
 
-
 @app.route('/')
 @app.route('/index')
 def index():
     return app.send_static_file('newclient.html')
 
+@app.route('/home')
+def home_tab():
+    return app.send_static_file('newclient.html')
+
+@app.route('/browse')
+def browse_tab():
+    return app.send_static_file('newclient.html')
+
+@app.route('/account')
+def account_tab():
+    return app.send_static_file('newclient.html')
+
+@app.route('/stats')
+def stats_tab():
+    return app.send_static_file('newclient.html')
 
 @app.route('/count_sessions')
 def server_count_sessions():
@@ -40,7 +54,6 @@ def server_sign_in():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        print(email + password)
         return sign_in(email, password)
 
     """Handles the websocket connection"""
@@ -53,8 +66,6 @@ def server_sign_in():
             global socket_storage
             socket_storage = check_socket_status(connected_user, socket_storage)
             socket_storage.append(connected_user)
-            #print("Listan ser ut som foljer:")
-            #print(socket_storage)
         return ""
 
 @app.route('/sign_up', methods=['POST'])

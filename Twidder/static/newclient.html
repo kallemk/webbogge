@@ -6,7 +6,8 @@
 		<link href="static/client.css" type="text/css" rel="stylesheet">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-		<script src="static/newclient.js" type="text/javascript"></script>
+        <script src="https://cdn.rawgit.com/visionmedia/page.js/master/page.js"></script>
+        <script src="static/newclient.js" type="text/javascript"></script>
 		<script type="text/view" id="welcomeview">
         <div id="container" class="container col-md-8 col-md-offset-2">
 			<div class="row col-md-12 col-sm-12 col-xs-12">
@@ -22,7 +23,7 @@
 							<input type="password" name="password" id="password" class="form-control input-sm login-input" required>
 						</div>
 						<div class="form-group">
-							<input type="button" value="Login" class="btn btn-default" class="form-control input-sm login-input" id="login-button" onclick="signIn()">
+							<input type="button" value="Login" class="btn btn-default" class="form-control input-sm login-input" id="login-button" onClick="signIn()">
 						</div>
 					</form>
 				</div>
@@ -83,10 +84,10 @@
 		<script type="text/view" id="profileview">
         <div class="container col-md-8 col-md-offset-2">
 			<ul class="nav nav-tabs">
-			    <li><a class="menu" href="" onclick="changePanel(home, browse, account, stats)">Home</a></li>
-			    <li><a class="menu" onclick="changePanel(browse, home, account, stats)">Browse</a></li>
-			    <li><a class="menu" onclick="changePanel(account, browse, home, stats)">Account</a></li>
-			    <li><a class="menu" id="stats-button" onclick="changePanel(stats, account, browse, home)">Stats</a></li>
+			    <li><a class="menu" href="/home">Home</a></li>
+			    <li><a class="menu" href="/browse">Browse</a></li>
+			    <li><a class="menu" href="/account">Account</a></li>
+			    <li><a class="menu" id="stats-button" href="/stats">Stats</a></li>
 			    <li><a class="menu" onclick="signOut()" id="sign-out-button">Sign out</a></li>
 			</ul>
 			<div class="row col-md-12 col-sm-12 col-xs-12">
