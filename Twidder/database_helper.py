@@ -55,12 +55,14 @@ def email_check_db(email):
     c.commit()
     return result.fetchone()
 
+
 def get_user_db(email):
     """Fetches all parameters in a user"""
     c = get_db()
     user = c.execute("SELECT * FROM users WHERE email=?", (email,))
     c.commit()
     return user.fetchone()
+
 
 def password_check_db(email, password):
     """Checks if the email has the given password. 1 if password exists, None if not."""
@@ -72,11 +74,13 @@ def password_check_db(email, password):
     c.commit()
     return result.fetchone()
 
+
 def sign_up_db(email, password, firstname, familyname, gender, city, country):
     """Receives data from new user, inserts it into the database and returna a success statement"""
     c = get_db()
     c.execute("INSERT INTO users(email, password, firstname, familyname, gender, city, country) VALUES(?,?,?,?,?,?,?)", (email, password, firstname, familyname, gender, city, country))
     c.commit()
+
 
 def change_password_db(email, old_pwd, new_pwd):
     """Changes the old_pwd with the new_pwd in the row with the email and old_pwd"""
@@ -84,14 +88,44 @@ def change_password_db(email, old_pwd, new_pwd):
     c.execute("UPDATE users SET password=? WHERE email=? AND password=?", (new_pwd, email, old_pwd))
     c.commit()
 
+
 def post_message_db(message, email_wall, email_sender):
     c = get_db()
     c.execute("INSERT INTO messages(email_sender, email_wall, message) VALUES(?,?,?)", (email_sender, email_wall, message))
     c.commit()
 
+
 def messages_by_email_db(email):
     c = get_db()
     result = c.execute("SELECT id, email_sender, email_wall, message FROM messages WHERE email_wall=?", (email,))
+    c.commit()
+    return result.fetchall()
+
+
+def count_users_db():
+    c = get_db()
+    result = c.execute("SELECT COUNT(email) FROM users")
+    c.commit()
+    return result.fetchone()
+
+
+def count_all_messages():
+    c = get_db()
+    result = c.execute("SELECT COUNT(*) FROM messages")
+    c.commit()
+    return result.fetchone()
+
+
+def count_user_messages(email):
+    c = get_db()
+    result = c.execute("SELECT COUNT(*) FROM messages WHERE email_sender=?", (email,))
+    c.commit()
+    return result.fetchone()
+
+
+def top_posters_db():
+    c = get_db()
+    result = c.execute("SELECT * FROM (SELECT email_sender, count(*) FROM messages GROUP BY email_sender) ORDER BY count(*) DESC LIMIT 3")
     c.commit()
     return result.fetchall()
 

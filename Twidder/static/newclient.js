@@ -276,7 +276,6 @@ function getUserByEmail(userEmail){
 	callbackPost("POST", "get_user_by_email", "Content-type", "application/x-www-form-urlencoded", formData, function(){
         var userData = this;
         if(userData.success === true){
-            setEmail(userEmail);
             showFriendInfo(userData);
             callbackPost("POST", "messages_by_email", "Content-type", "application/x-www-form-urlencoded", formData, function(){
                 var userMessages = this;
@@ -298,7 +297,6 @@ function getUserPost(){
 	var token = getToken();
 	var tokenData = "token=" + token;
 	var postContent = document.getElementById('to-user-wall').value;
-	//var email = getEmail();
 	var email = document.getElementById('show-email2').innerHTML;
 	console.log("Titta!");
 	console.log(email);
@@ -409,15 +407,6 @@ function setToken(token){
 	localStorage.setItem("myToken",token);
 }
 
-/*The functions below are used to make a quick call to
-know if there is an active search request on the browse tab*/
-function getEmail(){
-	return localStorage.getItem("userEmail");
-}
-
-function setEmail(email){
-	localStorage.setItem("userEmail",email);
-}
 
 /* The following functions are used to drag and drop smileys */
 
@@ -425,6 +414,7 @@ function setEmail(email){
 function allowDrop(ev) {
     ev.preventDefault();
 }
+
 
 /* Specifies what should happen when the element is dragged */
 function drag(ev) {
@@ -484,3 +474,90 @@ page('/stats', function(){
 
 page.start();
 
+/* The following functions are used to handle the data visualisation.
+CHart.js is used to create the charts, please see http://www.chartjs.org/ */
+
+function liveMessage():
+    console.log("Starting liveMessage");
+
+
+function liveLogin():
+    console.log("Starting liveLogin");
+
+
+
+function loadCharts(){
+    chartLoginLoad();
+    chartMessageLoad();
+    chartTopLoad();
+}
+
+
+function chartLoginLoad(){
+
+    //var logged_out = total - logged_in;
+
+    var doughnutData = [
+    {
+        value: 6,
+        color:"#F7464A",
+        highlight: "#FF5A5E",
+        label: "Logged in users"
+    },
+    {
+        value: 8,
+        color: "#46BFBD",
+        highlight: "#5AD3D1",
+        label: "Logged out users"
+    }
+    ];
+
+    var ctx = document.getElementById("login-chart-area").getContext("2d");
+	window.myDoughnut = new Chart(ctx).Doughnut(doughnutData, {responsive : true});
+};
+
+
+function chartMessageLoad(){
+
+
+    var doughnutData = [
+    {
+        value: 5,
+        color:"#F7464A",
+        highlight: "#FF5A5E",
+        label: "Your messages"
+    },
+    {
+        value: 16,
+        color: "#46BFBD",
+        highlight: "#5AD3D1",
+        label: "Others messages"
+    }
+    ];
+
+    var ctx = document.getElementById("message-chart-area").getContext("2d");
+    window.Doughnut = new Chart(ctx).Doughnut(doughnutData, {responsive : true});
+};
+
+
+function chartTopLoad(){
+
+	var barChartData = {
+		labels : ["January","February","March"],
+		datasets : [
+			{
+				fillColor : "rgba(220,220,220,0.5)",
+				strokeColor : "rgba(220,220,220,0.8)",
+				highlightFill: "rgba(220,220,220,0.75)",
+				highlightStroke: "rgba(220,220,220,1)",
+				data : [13, 9, 5]
+			}
+		]
+
+	}
+
+    var ctx = document.getElementById("top-chart-area").getContext("2d");
+    window.myBar = new Chart(ctx).Bar(barChartData, {
+        responsive : true
+    });
+}

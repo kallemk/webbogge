@@ -39,15 +39,6 @@ def account_tab():
 def stats_tab():
     return app.send_static_file('newclient.html')
 
-@app.route('/count_sessions')
-def server_count_sessions():
-    """Function that counts the number of sessions"""
-    print("Fungerar")
-    sessions = len(socket_storage)
-    print(sessions)
-    return "hejhej"
-
-
 @app.route('/sign_in', methods=['POST', 'GET'])
 def server_sign_in():
     """Signs the user in"""
@@ -85,6 +76,10 @@ def server_sign_out():
     """Receives the token for the user that will be signed out"""
     if request.method == 'POST':
         token = request.form['token']
+        email = str(get_user_email_by_token(token))
+        connected_user = {'email': email, 'token': token}
+        global socket_storage
+        socket_storage = logout_socket(connected_user, socket_storage)
         return sign_out(token)
 
 
@@ -175,6 +170,37 @@ def server_messages_by_token():
     return messages_by_token(token)
 
 
+@app.route('/count')
+def server_count_sessions():
+    """Function that counts the number of sessions"""
+    global socket_storage
+    temp_socket_stroage = socket_storage
+    counter = 0
+    for i in temp_socket_stroage:
+        if i['token'] is not None:
+            counter += 1
+    users = count_users()
+    return "Logged in users: " + str(counter) + " Total users: " + users
+
+
+@app.route('/messages')
+def server_count_messages():
+    return count_messages()
+
+
+@app.route('/top')
+def server_top_posters():
+    return top_posters()
+
+
+@app.route('/clear_sockets')
+def cleaer_sockets():
+    """s"""
+    global socket_storage
+    socket_storage = []
+    return "sockets cleared"
+
+
 @app.route('/test')
 def test_page():
     """This is used to test how simple things in flask an python works"""
@@ -197,16 +223,6 @@ def server_init_db():
     init_db_function()
     return "A new database has been set up!"
 
-@app.route('/get_sessions')
-def server_get_sessions():
-    """Function that returns the sessions"""
-    return "get_sessions()"
-
-@app.route('/clear_sessions')
-def server_clear_sessions():
-    """Function that clears the sessions"""
-    #clear_sessions()
-    return "A new database has been set up!"
 
 
 if __name__ == "__main__":

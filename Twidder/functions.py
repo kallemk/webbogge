@@ -190,6 +190,7 @@ def password_validation(pwd):
     else:
         return True
 
+
 def check_socket_status(connected_user, socket_storage):
     counter = 0
     for i in socket_storage:
@@ -201,6 +202,36 @@ def check_socket_status(connected_user, socket_storage):
             socket_storage.pop(counter)
         counter += 1
     return socket_storage
+
+
+def logout_socket(connected_user, socket_storage):
+    counter = 0
+    for i in socket_storage:
+        if i['email'] == connected_user.get('email'):
+            socket_storage.pop(counter)
+        counter += 1
+    return socket_storage
+
+def count_users():
+    result = count_users_db()
+    return str(result[0])
+
+
+def count_messages():
+    # Dummy code, temporary solution
+    email = "asd@asd.asd"
+    user_messages = count_user_messages(email)
+    total_messages = count_all_messages()
+    return "Your amount of messages: " + str(user_messages[0]) + " Total amount of messages: " + str(total_messages[0])
+
+
+def top_posters():
+    top_list = top_posters_db()
+    print(top_list)
+    print(top_list[0])
+    return "balllllleeeee"
+
+
 
 def session_exists(token):
     """Short function that checks if there is a session for the token.
@@ -223,6 +254,7 @@ def create_token():
 
 def init_db_function():
     init_db()
+
 
 def test_db_function(a,b):
     #test_db()
