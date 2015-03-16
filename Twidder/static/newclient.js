@@ -448,6 +448,7 @@ function liveLogin():
     console.log("Starting liveLogin");
 
 
+
 function loadCharts(){
     chartLoginLoad();
     chartMessageLoad();
