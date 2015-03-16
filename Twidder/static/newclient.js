@@ -1,5 +1,5 @@
 displayView = function(currentView){
-    document.getElementById("container").innerHTML = document.getElementById(currentView).innerHTML;
+    document.getElementById("script-container").innerHTML = document.getElementById(currentView).innerHTML;
     //$('body').html(document.getElementById(currentView).text);
     if(currentView === "profileview"){
     	showMyInformation();
@@ -205,13 +205,14 @@ var signupValidation = function(firstname, familyname, gender, city, country, em
 /*This function uses the input from the tab buttons to interpret
 which tab that is the one that should be shown. The function changes
 the style of the different div tags*/
-function changePanel(active, firstInactive, secondInactive){
+function changePanel(active, first, second, third){
 
 	active.style.display = 'block';
-	firstInactive.style.display = 'none';
-	secondInactive.style.display = 'none';
+	first.style.display = 'none';
+	second.style.display = 'none';
+    third.style.display = 'none';
 	//Makes sure that the text fields in the browse tab are erased
-	if(firstInactive === browse || secondInactive === browse){
+	if(first === browse || second === browse || third === browse){
 		$("#friend-info p").empty();
 		$("#user-message-wall textarea").empty();
 		localStorage.removeItem("userEmail");
