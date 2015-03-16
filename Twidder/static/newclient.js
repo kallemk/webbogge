@@ -477,13 +477,13 @@ page.start();
 /* The following functions are used to handle the data visualisation.
 CHart.js is used to create the charts, please see http://www.chartjs.org/ */
 
-function liveMessage():
+function liveMessage() {
     console.log("Starting liveMessage");
+}
 
-
-function liveLogin():
+function liveLogin() {
     console.log("Starting liveLogin");
-
+}
 
 
 function loadCharts(){
