@@ -144,7 +144,7 @@ function signIn(){
             socketDriver();
             //Sets the url when logged in to home
             window.history.pushState({}, '', '/home');
-            window.onload();
+            displayView("profileview");
         }else{
             displayUserAlerts(this.message);
 		    form.reset();
@@ -163,8 +163,7 @@ function signOut(){
             localStorage.removeItem('myToken');
             //Makes the url go back to default when arriving to the start page on welcome view
             window.history.replaceState(null,'','/');
-            window.onload();
-
+            displayView("welcomeview");
         }else{
             displayUserAlerts(this.message);
         }
