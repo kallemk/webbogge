@@ -122,6 +122,7 @@ def server_post_message():
     response = post_message(token, message, email_wall)
     global socket_storage
     live_message(socket_storage)
+
     return response
 
 
