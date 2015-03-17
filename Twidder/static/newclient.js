@@ -1,3 +1,4 @@
+/* Function that does the required operations for the views when they are loaded */
 displayView = function(currentView){
     //Appends the script to the script-container id in the HTML document
     document.getElementById("script-container").innerHTML = document.getElementById(currentView).innerHTML;
@@ -16,6 +17,8 @@ displayView = function(currentView){
     }
 };
 
+/* Function that is called to load the window.
+ Depending on if there is a token or not welcomeview or profile view will be called*/
 window.onload = function(){
 	var token = getToken();
 	//Token is null/undefined when not logged in
@@ -26,6 +29,7 @@ window.onload = function(){
     }
 };
 
+/* Functions that handles and initialises websockets.*/
 var socketDriver = function(){
     //Sets up the url path for the websocket
     var loc = window.location, new_uri;
@@ -41,6 +45,7 @@ var socketDriver = function(){
     ws.onopen = function(){
         ws.send(localStorage.getItem('myToken'));
     };
+    /* Depending on which kinde of data is provided this function handles it differently. */
     ws.onmessage = function (response) {
         console.log("################");
         console.log(response);
@@ -73,6 +78,9 @@ var socketDriver = function(){
     };
 };
 
+
+/* This is the callback function that is used to handle the XMLHttpRequests for each route in the server.
+ The function is very generic and all parameters for it has to be given when it is called.*/
 var callbackPost = function(method, url, requestHeader, requestHeaderValue, param,  callback){
     var xmlhttp;
     xmlhttp = new XMLHttpRequest();
@@ -88,6 +96,9 @@ var callbackPost = function(method, url, requestHeader, requestHeaderValue, para
     };
 };
 
+
+/* The function is used to sign up a user with the given data in the form.
+ If the data is written in a faulty way signupValidation woll be false and the user won't be signed up.*/
 var signUp = function(){
     //Assigns the different components of the form to user variables
     var form = document.getElementById("sign-up");
@@ -116,6 +127,9 @@ var signUp = function(){
     }
 };
 
+
+/* The function is used to sign the user with the given email and password.
+The socket connection is initiated */
 function signIn(){
     //Assigns the different components of the form to user variables
     var form = document.getElementById("log-in");
@@ -138,6 +152,8 @@ function signIn(){
     });
 }
 
+
+/* The function signs out the user according to the token in local storage */
 function signOut(){
 	var token = getToken();
     var tokenData = "token=" + token;
@@ -396,6 +412,7 @@ function getToken(){
 	return localStorage.getItem("myToken");
 }
 
+/* Used to set the token in the local storage */
 function setToken(token){
 	localStorage.setItem("myToken",token);
 }
@@ -460,31 +477,26 @@ page('/account', function(){
     localStorage.setItem("activeTab", 'account');
 });
 
+
 /* The following functions are used to handle the data visualisation.
 Chart.js is used to create the charts, please see http://www.chartjs.org/ */
 
+/* The function sends the correct parameters to chartLoginLoad */
 function updateLogin(logged_in, total){
     console.log("Starting uptdateLogin");
-    console.log(logged_in);
-    console.log(total);
     chartLoginLoad(logged_in, total);
 }
 
+
+/* The function sends the correct parameters to chartMessageLoad and chartTopLoad */
 function updateMessage(user_messages, total_messages, top_list){
     console.log("Starting updateMessage");
-    console.log(user_messages);
-    console.log(total_messages);
-    console.log(top_list[0]['email']);
-    console.log(top_list[0]['messages']);
-    console.log(top_list[1]['email']);
-    console.log(top_list[1]['messages']);
-    console.log(top_list[2]['email']);
-    console.log(top_list[2]['messages']);
     chartMessageLoad(user_messages, total_messages);
     chartTopLoad(top_list);
 }
 
 
+/* Function that handles the input parameters and uses them to load the data for the loggedin/total users chart */
 function chartLoginLoad(logged_in, total){
     console.log("Loading login chart");
 
@@ -512,6 +524,8 @@ function chartLoginLoad(logged_in, total){
 };
 
 
+/* Function that handles the input parameters
+and uses them to load the data for the users messages/total messages chart */
 function chartMessageLoad(user_messages, total_messages){
     console.log("Loading message chart");
 
@@ -537,6 +551,8 @@ function chartMessageLoad(user_messages, total_messages){
 };
 
 
+/* Function that handles the input parameters
+and uses them to load the data for the top posting users chart */
 function chartTopLoad(top_list){
     console.log("Loading top list chart");
 
