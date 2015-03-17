@@ -70,12 +70,12 @@ h3{
 	border-radius: 3px;
 }
 
-#smiley-box{
+/*#smiley-box{
 	background-color: #b9bdc4;
 	box-shadow: 0 0 5px 1px #787f8a;
 	border-radius: 3px;
 	min-width: 300px;
-}
+}*/
 
 #tab-box-logo{
 	background-color: #b9bdc4;
@@ -90,7 +90,6 @@ h3{
 	box-shadow: 0 0 5px 1px #787f8a;
 	border-radius: 3px;
 	min-width: 300px;
-	margin-top: 3%;
 }
 /*End of box styling*/
 
@@ -99,10 +98,6 @@ h3{
 	max-width: 100%;
 	height:auto;
 	vertical-align: middle;
-}
-
-#tab-box-logo img{
-	max-width:100% !important;
 }
 /*End of logo styling*/
 
@@ -246,6 +241,10 @@ label.pwd-label{width: 32%;}
 /*End of account tab styling*/
 
 /*Styling for data visualization*/
+h4{
+    text-align: center;
+}
+
 .canvas-holder{
     width: 50% !Important;
     padding: 2%;
@@ -253,5 +252,20 @@ label.pwd-label{width: 32%;}
 
 #canvas-holder3{
     width: 80% !Important;
+}
+
+#top-chart-area{
+    width:250px !important;
+    height: 200px !important;
+}
+
+#message-chart-area{
+    width:100px;
+    height:100px;
+}
+
+#login-chart-area{
+    width:100px;
+    height:100px;
 }
 /*End of data visualization styling*/
