@@ -218,6 +218,7 @@ def check_socket_status(connected_user, socket_storage):
 
 
 def logout_socket(connected_user, socket_storage):
+    """ This function is used to remove a user from the socket storage when logged out. """
     counter = 0
     for i in socket_storage:
         if i['email'] == connected_user.get('email') and i['token'] == connected_user.get('token'):
@@ -227,6 +228,10 @@ def logout_socket(connected_user, socket_storage):
 
 
 def live_message(socket_storage):
+    """ This function handles the live datavisualisation for messages.
+     The function requests the total amount of messages and the top 3 posters from the db.
+     For each logged in user the number of posts is retreived from the db.
+     The data is transformed into json and pushed through the sockets to all logged in users."""
     print("Starting live message")
     total_messages = count_total_messages()
     top_list = top_posters()
@@ -237,14 +242,19 @@ def live_message(socket_storage):
         socket_connection = i['connection']
         print(socket_connection)
         email = i['email']
+        # Requests the individual messages for each logged in user.
         user_messages = count_user_messages(email)
         data = {'total_messages' : total_messages, 'user_messages' : user_messages, 'top_list' : top_list}
         response = json.dumps({'type' : "live_message", 'data' : data})
+        # The response is pushed to the client.
         socket_connection.send(response)
 
 
 
 def live_login(socket_storage):
+    """ This function handles the live datavisualisation for registered and logged in users.
+     The function counts the number of online_users and requests the number of total_users from the db.
+     The data is transformed into json and pushed through the sockets to all logged in users."""
     print("Starting live login")
     counter = 0
     for i in socket_storage:
@@ -263,6 +273,7 @@ def live_login(socket_storage):
         print(i)
         socket_connection = i['connection']
         print(socket_connection)
+        # The response is pushed to the client.
         socket_connection.send(response)
 
 
@@ -275,23 +286,27 @@ def count_users():
 
 
 def count_user_messages(email):
+    """ gets the total amount of messages the given user has posted with the email.
+     returns the result as a string"""
     result = count_user_messages_db(email)
     return str(result[0])
 
 
 def count_total_messages():
+    """ gets the total amount of messages.
+     returns the result as a string"""
     result = count_total_messages_db()
     return str(result[0])
 
 
 def top_posters():
+    """ The function gets the three most post frequent user.
+     And the returns them.
+     The loop is generic so if there are fewer than 3 users it will work too."""
     result = top_posters_db()
     top_list = []
-    print("111111111111111222222222222222223333333333333333")
     for user in result:
         temp = {'email' : user[0], 'messages' : user[1]}
-        print(user[0])
-        print(user[1])
         top_list.append(temp)
     return top_list
 
@@ -322,5 +337,5 @@ def init_db_function():
 
 
 def test_db_function(a,b):
-    #test_db()
-    return "bizmillah"
+    #Simply a testing function
+    return "Test"

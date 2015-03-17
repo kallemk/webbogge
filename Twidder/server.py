@@ -12,27 +12,35 @@ app.secret_key = "nEOppiika4ucIcfhxEFFdR6NLJfp2qSj"
 #list to store connected users
 socket_storage = []
 
+
 @app.route('/')
 @app.route('/index')
 def index():
     """The file that is rendered then the app is starting"""
     return app.send_static_file('newclient.html')
 
-#The routes below that uses send_static_file makes it possible to refresh
+
+""" The routes below that uses send_static_file makes it possible to refresh. """
 @app.route('/home')
 def home_tab():
     return app.send_static_file('newclient.html')
+
 
 @app.route('/browse')
 def browse_tab():
     return app.send_static_file('newclient.html')
 
+
 @app.route('/account')
 def account_tab():
     return app.send_static_file('newclient.html')
 
+
 @app.route('/sign_in', methods=['POST', 'GET'])
 def server_sign_in():
+    """ The function signs in the user with the email and password.
+     The connections are stored in the socket_storage variable.
+     The functions for updating the live data are called"""
     print ("inne1")
     """Signs the user in"""
     if request.method == 'POST':
@@ -135,7 +143,6 @@ def server_post_message():
     response = post_message(token, message, email_wall)
     global socket_storage
     live_message(socket_storage)
-
     return response
 
 
@@ -176,7 +183,8 @@ def server_count_sessions():
 
 @app.route('/clear_sockets')
 def cleaer_sockets():
-    """s"""
+    """  Function used to clear all stored sockets.
+     For testing purposes."""
     global socket_storage
     socket_storage = []
     return "sockets cleared"
