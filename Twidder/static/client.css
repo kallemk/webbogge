@@ -84,6 +84,14 @@ h3{
 	min-width: 300px;
 	margin-top: 3%;
 }
+
+#tab-box-stats{
+    background-color: #b9bdc4;
+	box-shadow: 0 0 5px 1px #787f8a;
+	border-radius: 3px;
+	min-width: 300px;
+	margin-top: 3%;
+}
 /*End of box styling*/
 
 /*Logo styling in the different views*/
@@ -153,8 +161,6 @@ Javascript is used to change the style of these elements*/
 #browse{  display: none;  }
 
 #account{  display: none;  }
-
-#stats{  display: none;  }
 /*Tab styling ends here*/
 
 /*Styling for the user information in home and browse*/

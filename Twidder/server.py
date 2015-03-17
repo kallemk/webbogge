@@ -31,10 +31,6 @@ def browse_tab():
 def account_tab():
     return app.send_static_file('newclient.html')
 
-@app.route('/stats')
-def stats_tab():
-    return app.send_static_file('newclient.html')
-
 @app.route('/sign_in', methods=['POST', 'GET'])
 def server_sign_in():
     print ("inne1")

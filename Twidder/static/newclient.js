@@ -219,7 +219,6 @@ function changePanel(){
     document.getElementById('browse').style.display = 'none';
     document.getElementById('home').style.display = 'none';
     document.getElementById('account').style.display = 'none';
-    document.getElementById('stats').style.display = 'none';
 }
 
 /*Makes sure that the text fields in the browse tab are erased*/
@@ -459,15 +458,6 @@ page('/account', function(){
     clearBrowse();
     document.getElementById('account').style.display = 'block';
     localStorage.setItem("activeTab", 'account');
-});
-
-page('/stats', function(){
-    changePanel();
-    clearBrowse();
-    document.getElementById('stats').style.display = 'block';
-    localStorage.setItem("activeTab", 'stats');
-
-
 });
 
 /* The following functions are used to handle the data visualisation.
