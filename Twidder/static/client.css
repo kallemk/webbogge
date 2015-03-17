@@ -7,7 +7,106 @@ a.menu{
     color:black;
 }
 
+h3{
+	text-align: center;
+	font-size: 120%;
+	margin-top: 2%;
+	margin-bottom: 1%;
+	font-weight: 700;
+}
+/*End of the general tag styling*/
+
 /*styling below sets up the different boxes*/
+#alert {
+    margin: 2% auto 0 auto;
+    display: none;
+    background-color: #9F6000;
+    min-width: 300px;
+}
+
+#alertMessage {
+    margin: 5px auto;
+    padding-top: 5px;
+    text-align: center;
+}
+
+#main-box{
+	padding-left: 0;
+	padding-right: 0;
+}
+
+#left-box{
+	background-color: #b9bdc4;
+	clear: both;
+	float: left;
+	box-shadow: 0 0 5px 1px #787f8a;
+	border-radius: 3px;
+	min-width: 300px;
+	margin-top: 2%;
+}
+
+#right-box{
+	padding-left: 0;
+	padding-right: 0;
+	margin-top: 2%;
+}
+
+#login{
+	margin-top: 5%;
+	background-color: #b9bdc4;
+	float: left;
+	box-shadow: 0 0 5px 1px #787f8a;
+	border-radius: 3px;
+	min-width: 300px;
+	padding-bottom: 1%;
+}
+
+#signup{
+	min-width: 300px;
+	background-color: #b9bdc4;
+	/*margin: 0 auto 0 0;*/
+	float: left;
+	box-shadow: 0 0 5px 1px #787f8a;
+	border-radius: 3px;
+}
+
+#smiley-box{
+	background-color: #b9bdc4;
+	box-shadow: 0 0 5px 1px #787f8a;
+	border-radius: 3px;
+	min-width: 300px;
+}
+
+#tab-box-logo{
+	background-color: #b9bdc4;
+	box-shadow: 0 0 5px 1px #787f8a;
+	border-radius: 3px;
+	min-width: 300px;
+	margin-top: 3%;
+}
+
+#tab-box-stats{
+    background-color: #b9bdc4;
+	box-shadow: 0 0 5px 1px #787f8a;
+	border-radius: 3px;
+	min-width: 300px;
+	margin-top: 3%;
+}
+/*End of box styling*/
+
+/*Logo styling in the different views*/
+.img-responsive{
+	max-width: 100%;
+	height:auto;
+	vertical-align: middle;
+}
+
+#tab-box-logo img{
+	max-width:100% !important;
+}
+/*End of logo styling*/
+
+/*Styling related to forms*/
 form#sign-up{
 	margin-bottom: 7px;
 	margin-left: 5px;
@@ -28,118 +127,6 @@ input#login-button{
 
 label.control-label{
 	margin-right: 5%;
-}
-
-#main-box{
-	padding-left: 0;
-	padding-right: 0;
-
-}
-
-#alert {
-    /*width: 600px;
-    height: 30px;*/
-    margin: 2% auto 0 auto;
-    display: none;
-    background-color: #9F6000;
-    min-width: 300px;
-}
-
-#alertMessage {
-    margin: 5px auto;
-    padding-top: 5px;
-    text-align: center;
-    /*display: inline-block;*/
-}
-
-#left-box{
-	/*width: 340px;
-	height: 400px;*/
-	background-color: #b9bdc4;
-	clear: both;
-	float: left;
-	box-shadow: 0 0 5px 1px #787f8a;
-	border-radius: 3px;
-	min-width: 300px;
-	margin-top: 2%;
-}
-
-#right-box{
-	padding-left: 0;
-	padding-right: 0;
-	margin-top: 2%;
-}
-
-#login{
-	margin-top: 5%;
-	background-color: #b9bdc4;
-	/*margin: 0 auto 10px 10px;*/
-	float: left;
-	box-shadow: 0 0 5px 1px #787f8a;
-	border-radius: 3px;
-	min-width: 300px;
-	padding-bottom: 1%;
-}
-
-#signup{
-	min-width: 300px;
-	background-color: #b9bdc4;
-	/*margin: 0 auto 0 0;*/
-	float: left;
-	box-shadow: 0 0 5px 1px #787f8a;
-	border-radius: 3px;
-	margin-top: 2%;
-}
-
-#smiley-box{
-	background-color: #b9bdc4;
-	box-shadow: 0 0 5px 1px #787f8a;
-	border-radius: 3px;
-	min-width: 300px;
-}
-
-#tab-box-logo{
-	background-color: #b9bdc4;
-	box-shadow: 0 0 5px 1px #787f8a;
-	border-radius: 3px;
-	min-width: 300px;
-	margin-top: 3%;
-}
-
-.tab-box{
-	width: 250px;
-	height: 390px;
-	background-color: #b9bdc4;
-	margin: 0 auto 0 10px;
-	float: right;
-	box-shadow: 0 0 5px 1px #787f8a;
-	border-radius: 3px;
-	padding-top: 10px;
-}
-/*End of box styling*/
-
-/*Logo styling in the different views*/
-
-.img-responsive{
-	max-width: 100%;
-	height:auto;
-	vertical-align: middle;
-}
-
-#tab-box-logo img{
-	max-width:100% !important;
-}
-/*End of logo styling*/
-
-
-h3{
-	text-align: center;
-	font-size: 120%;
-	margin-top: 2%;
-	margin-bottom: 1%;
-	font-weight: 700;
-	/*margin-bottom: 2px;
-	margin-top: 5px;*/
 }
 
 .form-group input{
@@ -164,25 +151,16 @@ input.form-button {
 	margin-right: 40px;
 	margin-bottom: 5px;
 }
-/*End of the general tag styling*/
+/*End of form styling*/
+
 
 /*Styling to determine which tab that is active.
 Javascript is used to change the style of these elements*/
-#home{
-	display: block;
-}
+#home{  display: block;  }
 
-#browse{
-	display: none;
-}
+#browse{  display: none;  }
 
-#account{
-	display: none;
-}
-
-#stats{
-	display: none;
-}
+#account{  display: none;  }
 /*Tab styling ends here*/
 
 /*Styling for the user information in home and browse*/
@@ -226,6 +204,8 @@ input#view-user-button{
 
 input#user-email{
 	width:70%;
+    float:right;
+    margin-bottom: 1%;
 }
 
 form#browse-form{
@@ -239,7 +219,6 @@ form#browse-form{
 	margin-bottom: 2px;
 	margin-top: 5px;
 	font-weight: 700;
-
 }
 
 #post-to-wall textarea, #post-to-user-wall textarea{
@@ -263,11 +242,10 @@ form#browse-form{
 	font-weight: 700;
 }
 
-label.pwd-label{width: 30%;}
-
-
+label.pwd-label{width: 32%;}
 /*End of account tab styling*/
 
+/*Styling for data visualization*/
 .canvas-holder{
     width: 50% !Important;
     padding: 2%;
@@ -276,3 +254,4 @@ label.pwd-label{width: 30%;}
 #canvas-holder3{
     width: 80% !Important;
 }
+/*End of data visualization styling*/

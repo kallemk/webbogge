@@ -1,10 +1,15 @@
 displayView = function(currentView){
+    //Appends the script to the script-container id in the HTML document
     document.getElementById("script-container").innerHTML = document.getElementById(currentView).innerHTML;
     if(currentView === "profileview"){
+        //Used to set up the profile info and the message wall
     	showMyInformation();
     	setWallContent();
+        //Gets the tab that should be displayed on the refresh
         var id = localStorage.getItem('activeTab');
+        //Set display:none to all tabs
         changePanel();
+        //Set display:block to the active tab
         document.getElementById(id).style.display = 'block';
     }else if(currentView === "welcomeview"){
         localStorage.setItem("activeTab",'home');
@@ -22,6 +27,7 @@ window.onload = function(){
 };
 
 var socketDriver = function(){
+    //Sets up the url path for the websocket
     var loc = window.location, new_uri;
         if (loc.protocol === "https:") {
             new_uri = "wss:";
@@ -68,7 +74,6 @@ var socketDriver = function(){
 };
 
 var callbackPost = function(method, url, requestHeader, requestHeaderValue, param,  callback){
-    console.log("Starting callbackPost");
     var xmlhttp;
     xmlhttp = new XMLHttpRequest();
     xmlhttp.open(method, url, "true");
@@ -84,8 +89,7 @@ var callbackPost = function(method, url, requestHeader, requestHeaderValue, para
 };
 
 var signUp = function(){
-    console.log("Starting signup");
-
+    //Assigns the different components of the form to user variables
     var form = document.getElementById("sign-up");
     var firstname =  form[0].value;
     var familyname = form[1].value;
@@ -101,45 +105,33 @@ var signUp = function(){
         var formData = "firstname=" + firstname + "&familyname=" + familyname + "&gender=" + gender + "&city=" +city + "&country=" + country + "&email=" + email + "&password=" + password;
 
         callbackPost("POST", "sign_up", "Content-type", "application/x-www-form-urlencoded", formData, function(){
-            console.log("This displayed:");
-            console.log(this);
             if (this.success){
-                console.log("success");
                 displayUserAlerts(this.message);
 		        form.reset();
-                //setToken(response.data);
-                //window.onload();
             }else{
-                console.log("No success");
                 displayUserAlerts(this.message);
+                form.reset();
             }
         });
     }
 };
 
 function signIn(){
-    console.log("Starting signin");
-
+    //Assigns the different components of the form to user variables
     var form = document.getElementById("log-in");
     var email =  form[0].value;
     var password = form[1].value;
     var formData = "email=" + email + "&password=" + password;
-    console.log("formData:");
-    console.log(formData);
-
 
     callbackPost("POST", "sign_in", "Content-type", "application/x-www-form-urlencoded", formData, function(){
-        console.log("This displayed:");
-        console.log(this);
         if (this.success){
-            console.log("success, Token:");
-            console.log(this.data);
             setToken(this.data);
+            //Initiates the socket connection
             socketDriver();
+            //Sets the url when logged in to home
             window.history.pushState({}, '', '/home');
             window.onload();
         }else{
-            console.log("No success");
             displayUserAlerts(this.message);
 		    form.reset();
         }
@@ -147,22 +139,17 @@ function signIn(){
 }
 
 function signOut(){
-    console.log("Starting signout");
 	var token = getToken();
-    console.log(token);
     var tokenData = "token=" + token;
 
     callbackPost("POST", "sign_out", "Content-type", "application/x-www-form-urlencoded", tokenData, function(){
-        console.log("This displayed:");
-        console.log(this);
         if (this.success){
-            console.log("success");
             localStorage.removeItem('myToken');
+            //Makes the url go back to default when arriving to the start page on welcome view
             window.history.replaceState(null,'','/');
             window.onload();
 
         }else{
-            console.log("No success");
             displayUserAlerts(this.message);
         }
     });
@@ -170,7 +157,6 @@ function signOut(){
 
 /*The function appends the logged in user's info on the home tab*/
 function showMyInformation(){
-    console.log("Starting showMyInformation");
 	var tokenData = "token=" + getToken();
 
     callbackPost("POST", "get_user_by_token", "Content-type", "application/x-www-form-urlencoded", tokenData, function(){
@@ -191,6 +177,7 @@ var signupValidation = function(firstname, familyname, gender, city, country, em
     //Got this re string from http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
     var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     var x = 5; //Set the minimum character length of the password
+    var y = 50; //Set the maximum character length of all parameters
     if(firstname == ""){
         displayUserAlerts("Please fill in the first name field");
         return false;
@@ -218,21 +205,20 @@ var signupValidation = function(firstname, familyname, gender, city, country, em
 	}else if ((pwd1.length || pwd2.length) < x){
 		displayUserAlerts("The password must contain at least " + x + " characters");
 		return false;
-	}else{
+	}else if((firstname.length || familyname.length || gender.length || city.length || country.length || email.length || pwd1.length || pwd2.length) > y){
+        displayUserAlerts("The maximum number of characters is " + y);
+    }else{
 	    return true;
 	}
 }
 
 
-/*This function uses the input from the tab buttons to interpret
-which tab that is the one that should be shown. The function changes
-the style of the different div tags*/
+/*This function sets all tabs to display:none*/
 function changePanel(){
     document.getElementById('account').style.display = 'none';
     document.getElementById('browse').style.display = 'none';
     document.getElementById('home').style.display = 'none';
     document.getElementById('account').style.display = 'none';
-    document.getElementById('stats').style.display = 'none';
 }
 
 /*Makes sure that the text fields in the browse tab are erased*/
@@ -247,6 +233,7 @@ function clearBrowse(){
  It also erases the form content*/
 function changePassword(){
 	x = 5;
+    y = 50;
 	var oldPassword = document.getElementById('old-pwd').value;
 	var newPassword = document.getElementById('new-pwd').value;
 	var newPassword2 = document.getElementById('new-pwd2').value;
@@ -254,8 +241,10 @@ function changePassword(){
 	if(newPassword!=newPassword2){
 		displayUserAlerts("Both new password fields must be the same");
 	}else if ((newPassword.length || newPassword2.length) < x){
-				displayUserAlerts("The  new password must contain at least " + x + " characters");
-	}else{
+            displayUserAlerts("The  new password must contain at least " + x + " characters");
+	}else if((oldPassword.length || newPassword.length || newPassword2.length) > y){
+        displayUserAlerts("The maximum number of characters is " + y);
+    }else{
         callbackPost("POST", "change_password", "Content-type", "application/x-www-form-urlencoded", formData, function(){
             displayUserAlerts(this.message);
         });
@@ -269,7 +258,6 @@ function changePassword(){
 /* This function is used to provide the correct email form the userpage
  for the getUserByEmail when refreshing the messages */
 function refreshUser(){
-    console.log("Starting refreshUser");
     var userEmail = document.getElementById('show-email2').innerHTML;
     getUserByEmail(userEmail);
 }
@@ -277,9 +265,7 @@ function refreshUser(){
 /* This function is used when the user profile will be shown.
 It gets the correct email and passes it to getUserByEmail*/
 function getUser(){
-    console.log("Starting getUser");
     var userEmail = document.getElementById('user-email').value;
-    console.log(userEmail);
     getUserByEmail(userEmail);
 }
 
@@ -287,9 +273,7 @@ function getUser(){
 field and sets up the user page.
 It is also used for refreshing the messages of a user*/
 function getUserByEmail(userEmail){
-    console.log("Starting getUserByEmail");
 	var formData = "token=" + getToken() + "&email=" + userEmail;
-	console.log(formData);
 
 	callbackPost("POST", "get_user_by_email", "Content-type", "application/x-www-form-urlencoded", formData, function(){
         var userData = this;
@@ -297,12 +281,11 @@ function getUserByEmail(userEmail){
             showFriendInfo(userData);
             callbackPost("POST", "messages_by_email", "Content-type", "application/x-www-form-urlencoded", formData, function(){
                 var userMessages = this;
-                console.log(userMessages);
-                console.log(userMessages.data[0].message);
                 setUserWallContent(userMessages);
             });
         }else{
             displayUserAlerts(userData.message);
+            //Clears the user-email field
             document.getElementById('user-email').value = "";
         }
     });
@@ -316,8 +299,7 @@ function getUserPost(){
 	var tokenData = "token=" + token;
 	var postContent = document.getElementById('to-user-wall').value;
 	var email = document.getElementById('show-email2').innerHTML;
-	console.log("Titta!");
-	console.log(email);
+
 	if(postContent === ""){
 		displayUserAlerts("Write something!");
 	}else if(email === null || email === "undefined"){
@@ -331,9 +313,6 @@ function getUserPost(){
             if(this.success){
                 document.getElementById("to-user-wall").value = "";
                 callbackPost("POST", "messages_by_email", "Content-type", "application/x-www-form-urlencoded", postData, function(){
-                    console.log(this);
-                    console.log(this.data);
-                    console.log(this.data.messages);
                     setUserWallContent(this);
                 });
             }
@@ -380,15 +359,10 @@ function setWallContent(){
 }
 
 /*The function sets up the content of the searched users wall*/
-
 function setUserWallContent(userMessages){
-    console.log("Starting setuserwallcontent");
-    console.log(userMessages);
-    console.log(userMessages.data[0].message);
 	$("#user-message-wall textarea").empty();
     for (i = (userMessages.data.length -1); i > -1; i--) {
         $('#user-wall').append(userMessages.data[i].email_sender + " says:" + "\n");
-        console.log(userMessages.data[i].message);
         $('#user-wall').append(userMessages.data[i].message + "\n");
     }
 }
@@ -404,10 +378,11 @@ function showFriendInfo(user){
 	$('#show-gender2').append(user.data.gender);
 	$('#show-city2').append(user.data.city);
 	$('#show-country2').append(user.data.country);
+    //Erases the content of the user-email search field
 	document.getElementById('user-email').value = "";
 }
 
-/*The function appends the current alert message*/
+/*The function displays the current alert message*/
 function displayUserAlerts(message){
 	var alertBox = document.getElementById('alert');
     alertBox.style.display = "block";
@@ -432,7 +407,6 @@ function setToken(token){
 function allowDrop(ev) {
     ev.preventDefault();
 }
-
 
 /* Specifies what should happen when the element is dragged */
 function drag(ev) {
@@ -460,11 +434,15 @@ function drop(ev) {
     ev.target.value += document.getElementById(data).children[0].innerHTML;
 }
 
-/* Page routing*/
+/*The following code adds URL paths to the different routes*/
+page.start();
 
 page('/browse', function(){
+    //Set all the panels to display:none
     changePanel();
+    //Set the current tab to display:block
     document.getElementById('browse').style.display = 'block';
+    //Set the current tab to active, makes the browser stay at current tab when refreshed
     localStorage.setItem("activeTab", 'browse');
 });
 
@@ -482,19 +460,8 @@ page('/account', function(){
     localStorage.setItem("activeTab", 'account');
 });
 
-page('/stats', function(){
-    changePanel();
-    clearBrowse();
-    document.getElementById('stats').style.display = 'block';
-    localStorage.setItem("activeTab", 'stats');
-
-
-});
-
-page.start();
-
 /* The following functions are used to handle the data visualisation.
-CHart.js is used to create the charts, please see http://www.chartjs.org/ */
+Chart.js is used to create the charts, please see http://www.chartjs.org/ */
 
 function updateLogin(logged_in, total){
     console.log("Starting uptdateLogin");
