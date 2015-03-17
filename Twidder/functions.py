@@ -4,6 +4,8 @@ from flask import jsonify, session
 from Twidder.database_helper import *
 
 def sign_in(email, password):
+    """The function checks if email exists and if the password
+     works with it, and if it does it creates a session."""
     if email_check_db(email) and password_check_db(email, password):
         token = create_token()
         session[token] = email
@@ -18,7 +20,6 @@ def sign_up(email, password, firstname, familyname, gender, city, country):
     """Checks if the email is unique and
      sends the sign-up information to database helper.
      Returns a success or failure message"""
-    # The input might have to be modified if the client sends a formData object.
     if email_check_db(email):
         return jsonify(success=False,
                        message="User already exists.")
@@ -27,6 +28,7 @@ def sign_up(email, password, firstname, familyname, gender, city, country):
             return jsonify(success=False,
                            message="The password must contain at least 5 characters")
         try:
+            #The user is added to the user table in the database
             sign_up_db(email, password, firstname, familyname, gender, city, country)
             return jsonify(success=True,
                            message="Successfully created a new user.")
@@ -37,9 +39,9 @@ def sign_up(email, password, firstname, familyname, gender, city, country):
 
 def sign_out(token):
     """Checks if user is signed in and then removes the user from the signed in users"""
-    # Check if the token exists/user is logged in
+    #Check if the token exists/user is logged in
     if session_exists(token):
-        # Remove the token from logged in users
+        #Remove the token from logged in users
         session.pop(token, None)
         return jsonify(success=True,
                        message="Successfully signed out.")
@@ -49,15 +51,16 @@ def sign_out(token):
 
 
 def change_password(token, old_pwd, new_pwd):
-    """"""
-    # Check if token exists/user logged in
+    """If successful, this function changes the password
+    of the user that is currently logged in"""
+    #Check if token exists/user logged in
     if session_exists(token):
-        # Get the email for the token. Assign to variable.
+        #Get the email for the token of the current session.
         email = session[token]
-        # Check if the old_password corresponds to the password in the db for the email
+        #Check if the old_password corresponds to the password in the db for the email
         if password_check_db(email, old_pwd):
             if password_validation(new_pwd) is True:
-                # Assign new password
+                #Assign new password
                 change_password_db(email, old_pwd, new_pwd)
                 return jsonify(success=True,
                            message="Password changed.")
@@ -75,6 +78,7 @@ def get_user_data_by_token(token):
     """The function takes the token of the currently logged in user
     and sends the session to the function that fetches a user"""
     if session_exists(token):
+        #Get the email for the token of the current session.
         email = session[token]
         return get_user_data_by_email(token, email)
     else:
@@ -82,7 +86,10 @@ def get_user_data_by_token(token):
                        message="You are not signed in.")
 
 def get_user_email_by_token(token):
+    """The function returns the email of the logged in
+    user if it has an active session"""
     if session_exists(token):
+        #Get the email for the token of the current session.
         email = session[token]
         return email
     else:
@@ -117,6 +124,7 @@ def messages_by_token(token):
     """The function takes the token of the currently logged in user
     and sends the token together with it's email to the function that fetches the messages"""
     if session_exists(token):
+        #Get the email for the token of the current session.
         email = session[token]
         return messages_by_email(token, email)
     else:
@@ -132,12 +140,13 @@ def messages_by_email(token, email):
     and the result is returned together with a message."""
     if session_exists(token):
         if email_check_db(email):
+            #Fetches the messages of the wanted email
             messages = messages_by_email_db(email)
-            # I'm not sure if this is the right format to return the messages.
-            # Now it returns the massages as a list of dictionaries.
-            # A quite good solution according to me
+            #Creates a list to store messages in
             messages_list = []
             for i in messages:
+                #Loops through the messages and put them in a dictionary
+                #that is appended to the message list
                 message = {'id' : i[0],
                            'email_sender' : i[1],
                            'email_wall' : i[2],
@@ -160,11 +169,13 @@ def post_message(token, message, email_wall):
     The token is checked and used to get the email for the sender.
     The the message is inserted into the database and a success message is returned"""
     if session_exists(token):
+        #Determines the sender of the message by the current session
         email_sender = session[token]
         if email_wall == "":
             return jsonify(success=False,
                            message="No such user")
         if email_check_db(email_wall):
+            #Puts the message into the messages table in the database
             post_message_db(message, email_wall, email_sender)
             return jsonify(success=True,
                        message="Message posted")
@@ -175,16 +186,13 @@ def post_message(token, message, email_wall):
         return jsonify(success=False,
                        message="You are not signed in.")
 
-
-
-
-
 def password_validation(pwd):
     """Checks the length of the password.
     Returns True if the password is long enough
     and false if the password is too short.
     This function is just an extra feature and not required"""
-    min_length = 5 # Set the min length of the password.
+    #Set the min length of the password.
+    min_length = 5
     if len(pwd) < min_length:
         return False
     else:
@@ -192,13 +200,18 @@ def password_validation(pwd):
 
 
 def check_socket_status(connected_user, socket_storage):
+    """The function checks for other connections with the same
+    email, then if that's the case old connections are removed"""
+    #A counter for the loop through the socket list
     counter = 0
     for i in socket_storage:
+        #Checks if the current position in the list matches the current user
         if i['email'] == connected_user.get('email'):
-            #print("Anvandare att ta bort:")
-            #print(i)
+            #Creates a websocket variable out of the current position in the socket storage list
             socket_connection = i['connection']
+            #Sends a token to the concerned connection
             socket_connection.send(i['token'])
+            #Removes the connection
             socket_storage.pop(counter)
         counter += 1
     return socket_storage
@@ -213,11 +226,15 @@ def logout_socket(connected_user, socket_storage):
     return socket_storage
 
 def count_users():
+    """This function retrieves the result from the database helper
+    function that counts the total number of users"""
     result = count_users_db()
     return str(result[0])
 
 
 def count_messages():
+    """This function retrieves the result from the database helper
+    function that counts the number of messages posted by a user"""
     # Dummy code, temporary solution
     email = "asd@asd.asd"
     user_messages = count_user_messages(email)
@@ -226,6 +243,8 @@ def count_messages():
 
 
 def top_posters():
+    """This function retrieves the result from the database helper
+    function that picks the top three message poster users"""
     top_list = top_posters_db()
     print(top_list)
     print(top_list[0])
@@ -253,6 +272,7 @@ def create_token():
     return token
 
 def init_db_function():
+    """Initializes the database"""
     init_db()
 
 

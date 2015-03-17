@@ -1,7 +1,5 @@
 from sqlite3 import dbapi2 as sqlite3
 from flask import g, Flask
-#from contextlib import closing
-#import math, random
 import os
 
 """Used to get the path to the webbogge-folder"""
@@ -90,12 +88,14 @@ def change_password_db(email, old_pwd, new_pwd):
 
 
 def post_message_db(message, email_wall, email_sender):
+    """Adds the message to the messages table with message, receiver email and sender email"""
     c = get_db()
     c.execute("INSERT INTO messages(email_sender, email_wall, message) VALUES(?,?,?)", (email_sender, email_wall, message))
     c.commit()
 
 
 def messages_by_email_db(email):
+    """Retrieves all messages in the messages table from a certain email"""
     c = get_db()
     result = c.execute("SELECT id, email_sender, email_wall, message FROM messages WHERE email_wall=?", (email,))
     c.commit()
@@ -103,6 +103,7 @@ def messages_by_email_db(email):
 
 
 def count_users_db():
+    """This database function returns the total number of users in the user database table"""
     c = get_db()
     result = c.execute("SELECT COUNT(email) FROM users")
     c.commit()
@@ -110,6 +111,7 @@ def count_users_db():
 
 
 def count_all_messages():
+    """This database function returns the total number of messages in the messages database table"""
     c = get_db()
     result = c.execute("SELECT COUNT(*) FROM messages")
     c.commit()
@@ -117,6 +119,7 @@ def count_all_messages():
 
 
 def count_user_messages(email):
+    """This database function returns the number of messages posted by a specific user (email)"""
     c = get_db()
     result = c.execute("SELECT COUNT(*) FROM messages WHERE email_sender=?", (email,))
     c.commit()
@@ -124,6 +127,7 @@ def count_user_messages(email):
 
 
 def top_posters_db():
+    """This database function returns the three users that has posted the most messages"""
     c = get_db()
     result = c.execute("SELECT * FROM (SELECT email_sender, count(*) FROM messages GROUP BY email_sender) ORDER BY count(*) DESC LIMIT 3")
     c.commit()
