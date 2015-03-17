@@ -238,16 +238,17 @@ def live_message(socket_storage):
     print(total_messages)
     print(top_list)
     for i in socket_storage:
-        print(i)
-        socket_connection = i['connection']
-        print(socket_connection)
-        email = i['email']
-        # Requests the individual messages for each logged in user.
-        user_messages = count_user_messages(email)
-        data = {'total_messages' : total_messages, 'user_messages' : user_messages, 'top_list' : top_list}
-        response = json.dumps({'type' : "live_message", 'data' : data})
-        # The response is pushed to the client.
-        socket_connection.send(response)
+        if i['token'] is not None:
+            print(i)
+            socket_connection = i['connection']
+            print(socket_connection)
+            email = i['email']
+            # Requests the individual messages for each logged in user.
+            user_messages = count_user_messages(email)
+            data = {'total_messages' : total_messages, 'user_messages' : user_messages, 'top_list' : top_list}
+            response = json.dumps({'type' : "live_message", 'data' : data})
+            # The response is pushed to the client.
+            socket_connection.send(response)
 
 
 
@@ -268,13 +269,15 @@ def live_login(socket_storage):
     response = json.dumps({'type' : "live_login", 'data' : data})
 
     print(response)
+    print(socket_storage)
     print("Looping sockets...")
     for i in socket_storage:
-        print(i)
-        socket_connection = i['connection']
-        print(socket_connection)
-        # The response is pushed to the client.
-        socket_connection.send(response)
+        if i['token'] is not None:
+            print(i)
+            socket_connection = i['connection']
+            print(socket_connection)
+            # The response is pushed to the client.
+            socket_connection.send(response)
 
 
 

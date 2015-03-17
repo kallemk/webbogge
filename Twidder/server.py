@@ -89,6 +89,7 @@ def server_sign_up():
 
 @app.route('/sign_out', methods=['POST'])
 def server_sign_out():
+    print ("so1")
     """Receives the token for the user that will be signed out"""
     if request.method == 'POST':
         token = request.form['token']
