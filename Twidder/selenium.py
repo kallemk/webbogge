@@ -18,7 +18,7 @@ class SeleniumFinal(unittest.TestCase):
     def test_selenium_final(self):
         driver = self.driver
         driver.get(self.base_url + "/")
-        """The code below tries to signup with empty email field"""
+        """The code below tries to signup with empty email field """
         driver.find_element_by_id("firstname").clear()
         driver.find_element_by_id("firstname").send_keys("Anders")
         driver.find_element_by_id("lastname").clear()
