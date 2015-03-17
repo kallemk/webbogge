@@ -247,17 +247,17 @@ h4{
 }
 
 .canvas-holder{
-    width: 50% !Important;
+    width: 50% !important;
     padding: 2%;
 }
 
 #canvas-holder3{
-    width: 80% !Important;
+    width:80% !important;
 }
 
 #top-chart-area{
-    width:250px !important;
-    height: 200px !important;
+    width:250px;
+    height:200px;
 }
 
 #message-chart-area{

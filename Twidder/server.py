@@ -14,7 +14,6 @@ app.secret_key = "nEOppiika4ucIcfhxEFFdR6NLJfp2qSj"
 #list to store connected users
 socket_storage = []
 
-
 @app.route('/')
 @app.route('/index')
 def index():

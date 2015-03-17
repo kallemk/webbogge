@@ -480,6 +480,8 @@ function updateMessage(user_messages, total_messages, top_list){
 /* Function that handles the input parameters and uses them to load the data for the loggedin/total users chart */
 function chartLoginLoad(logged_in, total){
 
+    $('#login-chart-area').remove(); // this is my <canvas> element
+    $('#canvas-holder1').append('<canvas id="login-chart-area"/>');
     var logged_out = total - logged_in;
 
     var doughnutData = [
@@ -505,6 +507,8 @@ function chartLoginLoad(logged_in, total){
 /* Function that handles the input parameters
 and uses them to load the data for the users messages/total messages chart */
 function chartMessageLoad(user_messages, total_messages){
+    $('#message-chart-area').remove(); // this is my <canvas> element
+    $('#canvas-holder2').append('<canvas id="message-chart-area"/>');
     var other_messages = total_messages - user_messages;
 
     var doughnutData = [
@@ -531,10 +535,13 @@ function chartMessageLoad(user_messages, total_messages){
 and uses them to load the data for the top posting users chart */
 function chartTopLoad(top_list){
 
-    var labels_temp = []
-    var data_temp = []
+    $('#top-chart-area').remove(); // this is my <canvas> element
+    $('#canvas-holder3').append('<canvas id="top-chart-area"/></canvas>');
+
+    var labels_temp = [];
+    var data_temp = [];
     for (i in top_list){
-        labels_temp.push(top_list[i]['email'])
+        labels_temp.push(top_list[i]['email']);
         data_temp.push(parseInt(top_list[i]['messages']))
     }
 
