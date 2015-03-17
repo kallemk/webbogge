@@ -3,6 +3,7 @@ from gevent.wsgi import WSGIServer
 from geventwebsocket.handler import WebSocketHandler
 from Twidder.functions import *
 import os
+import json
 
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 
@@ -41,35 +42,29 @@ def server_sign_in():
     """ The function signs in the user with the email and password.
      The connections are stored in the socket_storage variable.
      The functions for updating the live data are called"""
-    print ("inne1")
     """Signs the user in"""
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        print ("inne2")
         return sign_in(email, password)
 
     """Handles the websocket connection when signing in"""
     if request.environ.get('wsgi.websocket'):
-        print ("inne3")
         ws = request.environ['wsgi.websocket']
         while True:
-            print ("inne4")
             token = ws.receive()
-            email = str(get_user_email_by_token(token))
-            #Creates a dictionary item to put in the global list of connections
-            connected_user = {'email': email, 'connection': ws, 'token': token}
-            global socket_storage
-            #The function below checks if there are other connections with the same email
-            #and removes it if that is the case
-            socket_storage = check_socket_status(connected_user, socket_storage)
-            #Adds the signed in user to the list of connected users
-            socket_storage.append(connected_user)
-            print ("inne5")
-            live_login(socket_storage)
-            live_message(socket_storage)
-            print ("inne6")
-
+            if token is not None:
+                email = str(get_user_email_by_token(token))
+                #Creates a dictionary item to put in the global list of connections
+                connected_user = {'email': email, 'connection': ws, 'token': token}
+                #The function below checks if there are other connections with the same email
+                #and removes it if that is the case
+                global socket_storage
+                if check_socket_status(connected_user):
+                    #Adds the signed in user to the list of connected users
+                    socket_storage.append(connected_user)
+                live_login(socket_storage)
+                live_message(socket_storage)
         return ""
 
 @app.route('/sign_up', methods=['POST'])
@@ -89,7 +84,6 @@ def server_sign_up():
 
 @app.route('/sign_out', methods=['POST'])
 def server_sign_out():
-    print ("so1")
     """Receives the token for the user that will be signed out"""
     if request.method == 'POST':
         token = request.form['token']
@@ -98,9 +92,41 @@ def server_sign_out():
         global socket_storage
         socket_storage = logout_socket(connected_user, socket_storage)
         response = sign_out(token)
-        print(response)
         live_login(socket_storage)
         return response
+
+
+
+def check_socket_status(connected_user):
+    """The function checks for other connections with the same
+    email, then if that's the case old connections are removed"""
+    #A counter for the loop through the socket list
+    #counter = 0
+    global socket_storage
+    for i in socket_storage:
+        #Checks if the current position in the list matches the current user
+        if i['email'] == connected_user.get('email'):
+            if (connected_user['connection'] != i['connection']) and (connected_user['token'] == i['token']):
+                #Creates a websocket variable out of the current position in the socket storage list
+                i['connection'] = connected_user['connection']
+                return False
+            else:
+                response = json.dumps({'token' : i['token']})
+                send_to = i['connection']
+                send_to.send(response)
+                socket_storage.remove(i)
+        #counter += 1
+    return True
+
+
+def logout_socket(connected_user, socket_storage):
+    """ This function is used to remove a user from the socket storage when logged out. """
+    counter = 0
+    for i in socket_storage:
+        if i['email'] == connected_user.get('email') and i['token'] == connected_user.get('token'):
+            socket_storage.pop(counter)
+        counter += 1
+    return socket_storage
 
 
 @app.route('/change_password', methods=['POST'])
@@ -176,9 +202,6 @@ def server_count_sessions():
         if i['token'] is not None:
             counter += 1
     users = count_users()
-    print("----")
-    print(socket_storage)
-    print("----")
     return "Logged in users: " + str(counter) + " Total users: " + users
 
 

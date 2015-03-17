@@ -27,6 +27,7 @@ window.onload = function(){
     if(token === null || token === 'undefined'){
     	displayView("welcomeview");
     }else{
+        socketDriver();
     	displayView("profileview");
     }
 };
@@ -41,11 +42,14 @@ var socketDriver = function(){
             new_uri = "ws:";
         }
     new_uri += "//" + loc.host;
-    new_uri += loc.pathname + "sign_in";
+    new_uri += "/sign_in";
     console.log(new_uri);
     var ws = new WebSocket(new_uri);
     ws.onopen = function(){
+        console.log("11111111111111111");
         ws.send(localStorage.getItem('myToken'));
+        console.log(localStorage.getItem('myToken'));
+        console.log("22222222222222222");
     };
     /* Depending on which kinde of data is provided this function handles it differently. */
     ws.onmessage = function (response) {
@@ -73,6 +77,11 @@ var socketDriver = function(){
         }else{
             console.log('Something is wrong')
         }
+    };
+
+    window.onbeforeunload = function(){
+        console.log("On before unload");
+        ws.close();
     };
 
     ws.onclose = function () {

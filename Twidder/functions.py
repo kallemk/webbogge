@@ -200,33 +200,6 @@ def password_validation(pwd):
         return True
 
 
-def check_socket_status(connected_user, socket_storage):
-    """The function checks for other connections with the same
-    email, then if that's the case old connections are removed"""
-    #A counter for the loop through the socket list
-    counter = 0
-    for i in socket_storage:
-        #Checks if the current position in the list matches the current user
-        if i['email'] == connected_user.get('email'):
-            #Creates a websocket variable out of the current position in the socket storage list
-            socket_connection = i['connection']
-            response = json.dumps({'token' : i['token']})
-            socket_connection.send(response)
-            socket_storage.pop(counter)
-        counter += 1
-    return socket_storage
-
-
-def logout_socket(connected_user, socket_storage):
-    """ This function is used to remove a user from the socket storage when logged out. """
-    counter = 0
-    for i in socket_storage:
-        if i['email'] == connected_user.get('email') and i['token'] == connected_user.get('token'):
-            socket_storage.pop(counter)
-        counter += 1
-    return socket_storage
-
-
 def live_message(socket_storage):
     """ This function handles the live datavisualisation for messages.
      The function requests the total amount of messages and the top 3 posters from the db.
@@ -235,13 +208,9 @@ def live_message(socket_storage):
     print("Starting live message")
     total_messages = count_total_messages()
     top_list = top_posters()
-    print(total_messages)
-    print(top_list)
     for i in socket_storage:
         if i['token'] is not None:
-            print(i)
             socket_connection = i['connection']
-            print(socket_connection)
             email = i['email']
             # Requests the individual messages for each logged in user.
             user_messages = count_user_messages(email)
@@ -262,20 +231,13 @@ def live_login(socket_storage):
         if i['token'] is not None:
             counter += 1
     online_users = counter
-    print("Online users: " + str(online_users))
     total_users = count_users()
-    print("Total users: " + str(total_users))
     data = {'online_users' : online_users, 'total_users' : total_users}
     response = json.dumps({'type' : "live_login", 'data' : data})
 
-    print(response)
-    print(socket_storage)
-    print("Looping sockets...")
     for i in socket_storage:
         if i['token'] is not None:
-            print(i)
             socket_connection = i['connection']
-            print(socket_connection)
             # The response is pushed to the client.
             socket_connection.send(response)
 
