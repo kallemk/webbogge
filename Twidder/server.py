@@ -37,16 +37,20 @@ def stats_tab():
 
 @app.route('/sign_in', methods=['POST', 'GET'])
 def server_sign_in():
+    print ("inne1")
     """Signs the user in"""
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
+        print ("inne2")
         return sign_in(email, password)
 
     """Handles the websocket connection when signing in"""
     if request.environ.get('wsgi.websocket'):
+        print ("inne3")
         ws = request.environ['wsgi.websocket']
         while True:
+            print ("inne4")
             token = ws.receive()
             email = str(get_user_email_by_token(token))
             #Creates a dictionary item to put in the global list of connections
@@ -57,6 +61,11 @@ def server_sign_in():
             socket_storage = check_socket_status(connected_user, socket_storage)
             #Adds the signed in user to the list of connected users
             socket_storage.append(connected_user)
+            print ("inne5")
+            live_login(socket_storage)
+            live_message(socket_storage)
+            print ("inne6")
+
         return ""
 
 @app.route('/sign_up', methods=['POST'])
@@ -69,18 +78,24 @@ def server_sign_up():
     gender = request.form['gender']
     city = request.form['city']
     country = request.form['country']
-    return sign_up(email, password, firstname, familyname, gender, city, country)
+    response = sign_up(email, password, firstname, familyname, gender, city, country)
+    global socket_storage
+    live_login(socket_storage)
+    return response
 
 @app.route('/sign_out', methods=['POST'])
 def server_sign_out():
     """Receives the token for the user that will be signed out"""
     if request.method == 'POST':
         token = request.form['token']
-        #email = str(get_user_email_by_token(token))
-        #connected_user = {'email': email, 'token': token}
-        #global socket_storage
-        #socket_storage = logout_socket(connected_user, socket_storage)
-        return sign_out(token)
+        email = str(get_user_email_by_token(token))
+        connected_user = {'email': email, 'token': token}
+        global socket_storage
+        socket_storage = logout_socket(connected_user, socket_storage)
+        response = sign_out(token)
+        print(response)
+        live_login(socket_storage)
+        return response
 
 
 @app.route('/change_password', methods=['POST'])
@@ -121,7 +136,11 @@ def server_post_message():
     token = request.form['token']
     message = request.form['message']
     email_wall = request.form['email_wall']
-    return post_message(token, message, email_wall)
+    response = post_message(token, message, email_wall)
+    global socket_storage
+    live_message(socket_storage)
+    return response
+
 
 @app.route('/messages_by_email', methods=['POST'])
 def server_messages_by_email():
@@ -146,27 +165,16 @@ def server_messages_by_token():
 def server_count_sessions():
     """Function that counts the number of sessions"""
     global socket_storage
-    temp_socket_stroage = socket_storage
+    temp_socket_storage = socket_storage
     counter = 0
-    for i in temp_socket_stroage:
+    for i in temp_socket_storage:
         if i['token'] is not None:
             counter += 1
     users = count_users()
+    print("----")
+    print(socket_storage)
+    print("----")
     return "Logged in users: " + str(counter) + " Total users: " + users
-
-
-@app.route('/messages')
-def server_count_messages():
-    """Calls the function in functions.py that
-    retrieves the total number of messages"""
-    return count_messages()
-
-
-@app.route('/top')
-def server_top_posters():
-    """Calls the function in functions.py that
-    retrieves the top three message poster users"""
-    return top_posters()
 
 
 @app.route('/clear_sockets')

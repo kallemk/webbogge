@@ -1,5 +1,6 @@
 import math
 import random
+import json
 from flask import jsonify, session
 from Twidder.database_helper import *
 
@@ -209,9 +210,8 @@ def check_socket_status(connected_user, socket_storage):
         if i['email'] == connected_user.get('email'):
             #Creates a websocket variable out of the current position in the socket storage list
             socket_connection = i['connection']
-            #Sends a token to the concerned connection
-            socket_connection.send(i['token'])
-            #Removes the connection
+            response = json.dumps({'token' : i['token']})
+            socket_connection.send(response)
             socket_storage.pop(counter)
         counter += 1
     return socket_storage
@@ -220,10 +220,52 @@ def check_socket_status(connected_user, socket_storage):
 def logout_socket(connected_user, socket_storage):
     counter = 0
     for i in socket_storage:
-        if i['email'] == connected_user.get('email'):
+        if i['email'] == connected_user.get('email') and i['token'] == connected_user.get('token'):
             socket_storage.pop(counter)
         counter += 1
     return socket_storage
+
+
+def live_message(socket_storage):
+    print("Starting live message")
+    total_messages = count_total_messages()
+    top_list = top_posters()
+    print(total_messages)
+    print(top_list)
+    for i in socket_storage:
+        print(i)
+        socket_connection = i['connection']
+        print(socket_connection)
+        email = i['email']
+        user_messages = count_user_messages(email)
+        data = {'total_messages' : total_messages, 'user_messages' : user_messages, 'top_list' : top_list}
+        response = json.dumps({'type' : "live_message", 'data' : data})
+        socket_connection.send(response)
+
+
+
+def live_login(socket_storage):
+    print("Starting live login")
+    counter = 0
+    for i in socket_storage:
+        if i['token'] is not None:
+            counter += 1
+    online_users = counter
+    print("Online users: " + str(online_users))
+    total_users = count_users()
+    print("Total users: " + str(total_users))
+    data = {'online_users' : online_users, 'total_users' : total_users}
+    response = json.dumps({'type' : "live_login", 'data' : data})
+
+    print(response)
+    print("Looping sockets...")
+    for i in socket_storage:
+        print(i)
+        socket_connection = i['connection']
+        print(socket_connection)
+        socket_connection.send(response)
+
+
 
 def count_users():
     """This function retrieves the result from the database helper
@@ -232,23 +274,26 @@ def count_users():
     return str(result[0])
 
 
-def count_messages():
-    """This function retrieves the result from the database helper
-    function that counts the number of messages posted by a user"""
-    # Dummy code, temporary solution
-    email = "asd@asd.asd"
-    user_messages = count_user_messages(email)
-    total_messages = count_all_messages()
-    return "Your amount of messages: " + str(user_messages[0]) + " Total amount of messages: " + str(total_messages[0])
+def count_user_messages(email):
+    result = count_user_messages_db(email)
+    return str(result[0])
+
+
+def count_total_messages():
+    result = count_total_messages_db()
+    return str(result[0])
 
 
 def top_posters():
-    """This function retrieves the result from the database helper
-    function that picks the top three message poster users"""
-    top_list = top_posters_db()
-    print(top_list)
-    print(top_list[0])
-    return "balllllleeeee"
+    result = top_posters_db()
+    top_list = []
+    print("111111111111111222222222222222223333333333333333")
+    for user in result:
+        temp = {'email' : user[0], 'messages' : user[1]}
+        print(user[0])
+        print(user[1])
+        top_list.append(temp)
+    return top_list
 
 
 
@@ -278,5 +323,4 @@ def init_db_function():
 
 def test_db_function(a,b):
     #test_db()
-    session["hej"]
     return "bizmillah"

@@ -110,7 +110,7 @@ def count_users_db():
     return result.fetchone()
 
 
-def count_all_messages():
+def count_total_messages_db():
     """This database function returns the total number of messages in the messages database table"""
     c = get_db()
     result = c.execute("SELECT COUNT(*) FROM messages")
@@ -118,7 +118,7 @@ def count_all_messages():
     return result.fetchone()
 
 
-def count_user_messages(email):
+def count_user_messages_db(email):
     """This database function returns the number of messages posted by a specific user (email)"""
     c = get_db()
     result = c.execute("SELECT COUNT(*) FROM messages WHERE email_sender=?", (email,))
