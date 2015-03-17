@@ -3,6 +3,7 @@ displayView = function(currentView){
     //Appends the script to the script-container id in the HTML document
     document.getElementById("script-container").innerHTML = document.getElementById(currentView).innerHTML;
     if(currentView === "profileview"){
+        console.log("Onload profileview");
         //Used to set up the profile info and the message wall
     	showMyInformation();
     	setWallContent();
@@ -13,6 +14,7 @@ displayView = function(currentView){
         //Set display:block to the active tab
         document.getElementById(id).style.display = 'block';
     }else if(currentView === "welcomeview"){
+        console.log("Onload welcomeview");
         localStorage.setItem("activeTab",'home');
     }
 };
