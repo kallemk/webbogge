@@ -7,8 +7,7 @@ PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 """Creates the path for the database-file"""
 DATABASE = os.path.join(PROJECT_ROOT, 'database.db')
 
-"""Works with these but I'm not sure if it is a problem that
-I have the flask-app thing in both server.py and database_helper.py"""
+"""Initiates the flask application"""
 app = Flask(__name__)
 app.config.from_object(__name__)
 

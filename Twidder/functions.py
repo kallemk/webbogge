@@ -205,7 +205,6 @@ def live_message(socket_storage):
      The function requests the total amount of messages and the top 3 posters from the db.
      For each logged in user the number of posts is retreived from the db.
      The data is transformed into json and pushed through the sockets to all logged in users."""
-    print("Starting live message")
     total_messages = count_total_messages()
     top_list = top_posters()
     for i in socket_storage:
@@ -225,7 +224,6 @@ def live_login(socket_storage):
     """ This function handles the live datavisualisation for registered and logged in users.
      The function counts the number of online_users and requests the number of total_users from the db.
      The data is transformed into json and pushed through the sockets to all logged in users."""
-    print("Starting live login")
     counter = 0
     for i in socket_storage:
         if i['token'] is not None:

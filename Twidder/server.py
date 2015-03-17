@@ -5,6 +5,7 @@ from Twidder.functions import *
 import os
 import json
 
+"""Used to get the path to the webbogge-folder"""
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 app = Flask(__name__, static_url_path='/static')
@@ -95,17 +96,15 @@ def server_sign_out():
         live_login(socket_storage)
         return response
 
-
-
+"""The two functions below helps the sign_in and sign_out routes above"""
 def check_socket_status(connected_user):
     """The function checks for other connections with the same
     email, then if that's the case old connections are removed"""
-    #A counter for the loop through the socket list
-    #counter = 0
     global socket_storage
     for i in socket_storage:
         #Checks if the current position in the list matches the current user
         if i['email'] == connected_user.get('email'):
+            #If statement below handles if websocket has been restarted, gives the logged in user a new connection
             if (connected_user['connection'] != i['connection']) and (connected_user['token'] == i['token']):
                 #Creates a websocket variable out of the current position in the socket storage list
                 i['connection'] = connected_user['connection']
@@ -113,9 +112,9 @@ def check_socket_status(connected_user):
             else:
                 response = json.dumps({'token' : i['token']})
                 send_to = i['connection']
+                #Sends response to the concerned user
                 send_to.send(response)
                 socket_storage.remove(i)
-        #counter += 1
     return True
 
 
