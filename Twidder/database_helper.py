@@ -109,14 +109,14 @@ def count_users_db():
     return result.fetchone()
 
 
-def count_all_messages():
+def count_total_messages_db():
     c = get_db()
     result = c.execute("SELECT COUNT(*) FROM messages")
     c.commit()
     return result.fetchone()
 
 
-def count_user_messages(email):
+def count_user_messages_db(email):
     c = get_db()
     result = c.execute("SELECT COUNT(*) FROM messages WHERE email_sender=?", (email,))
     c.commit()

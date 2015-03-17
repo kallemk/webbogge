@@ -36,9 +36,27 @@ var socketDriver = function(){
         ws.send(localStorage.getItem('myToken'));
     };
     ws.onmessage = function (response) {
-        if(response.data == getToken()){
+        console.log("################");
+        console.log(response);
+        console.log(typeof(response.data), "this is the type")
+        parsed = JSON.parse(response.data);
+        console.log(parsed);
+        if(parsed.token == getToken()){
             displayUserAlerts("You have been logged in somewhere else.");
             signOut();
+        }else if(parsed.type == "live_login"){
+            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!");
+            console.log(parsed.data.total_users);
+            console.log(typeof(parsed.data.total_users), "this is the type")
+            console.log(parsed.data.online_users);
+            console.log(typeof(parsed.data.total_users), "this is the type")
+            updateLogin(parseInt(parsed.data.online_users), parseInt(parsed.data.total_users));
+        }else if(parsed.type == "live_message"){
+            console.log("??????????????????????????");
+            console.log(parsed.data.total_messages);
+            console.log(parsed.data.user_messages);
+            console.log(parsed.data.top_list);
+            updateMessage(parseInt(parsed.data.user_messages), parseInt(parsed.data.total_messages), parsed.data.top_list);
         }else{
             console.log('Something is wrong')
         }
@@ -470,6 +488,7 @@ page('/stats', function(){
     document.getElementById('stats').style.display = 'block';
     localStorage.setItem("activeTab", 'stats');
 
+
 });
 
 page.start();
@@ -477,35 +496,43 @@ page.start();
 /* The following functions are used to handle the data visualisation.
 CHart.js is used to create the charts, please see http://www.chartjs.org/ */
 
-function liveMessage() {
-    console.log("Starting liveMessage");
+function updateLogin(logged_in, total){
+    console.log("Starting uptdateLogin");
+    console.log(logged_in);
+    console.log(total);
+    chartLoginLoad(logged_in, total);
 }
 
-function liveLogin() {
-    console.log("Starting liveLogin");
+function updateMessage(user_messages, total_messages, top_list){
+    console.log("Starting updateMessage");
+    console.log(user_messages);
+    console.log(total_messages);
+    console.log(top_list[0]['email']);
+    console.log(top_list[0]['messages']);
+    console.log(top_list[1]['email']);
+    console.log(top_list[1]['messages']);
+    console.log(top_list[2]['email']);
+    console.log(top_list[2]['messages']);
+    chartMessageLoad(user_messages, total_messages);
+    chartTopLoad(top_list);
 }
 
 
-function loadCharts(){
-    chartLoginLoad();
-    chartMessageLoad();
-    chartTopLoad();
-}
+function chartLoginLoad(logged_in, total){
+    console.log("Loading login chart");
 
-
-function chartLoginLoad(){
-
-    //var logged_out = total - logged_in;
+    var logged_out = total - logged_in;
+    console.log(logged_out);
 
     var doughnutData = [
     {
-        value: 6,
+        value: logged_in,
         color:"#F7464A",
         highlight: "#FF5A5E",
         label: "Logged in users"
     },
     {
-        value: 8,
+        value: logged_out,
         color: "#46BFBD",
         highlight: "#5AD3D1",
         label: "Logged out users"
@@ -514,21 +541,24 @@ function chartLoginLoad(){
 
     var ctx = document.getElementById("login-chart-area").getContext("2d");
 	window.myDoughnut = new Chart(ctx).Doughnut(doughnutData, {responsive : true});
+	console.log("chart should be loaded")
 };
 
 
-function chartMessageLoad(){
+function chartMessageLoad(user_messages, total_messages){
+    console.log("Loading message chart");
 
+    var other_messages = total_messages - user_messages;
 
     var doughnutData = [
     {
-        value: 5,
+        value: user_messages,
         color:"#F7464A",
         highlight: "#FF5A5E",
         label: "Your messages"
     },
     {
-        value: 16,
+        value: other_messages,
         color: "#46BFBD",
         highlight: "#5AD3D1",
         label: "Others messages"
@@ -540,17 +570,28 @@ function chartMessageLoad(){
 };
 
 
-function chartTopLoad(){
+function chartTopLoad(top_list){
+    console.log("Loading top list chart");
+
+    console.log(top_list[0]['email']);
+    var labels_temp = []
+    var data_temp = []
+    for (i in top_list){
+        labels_temp.push(top_list[i]['email'])
+        data_temp.push(parseInt(top_list[i]['messages']))
+    }
+    console.log(labels_temp);
+    console.log(data_temp);
 
 	var barChartData = {
-		labels : ["January","February","March"],
+		labels : labels_temp,
 		datasets : [
 			{
 				fillColor : "rgba(220,220,220,0.5)",
 				strokeColor : "rgba(220,220,220,0.8)",
 				highlightFill: "rgba(220,220,220,0.75)",
 				highlightStroke: "rgba(220,220,220,1)",
-				data : [13, 9, 5]
+				data : data_temp
 			}
 		]
 
