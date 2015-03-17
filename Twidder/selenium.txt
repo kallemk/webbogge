@@ -1,0 +1,72 @@
+# -*- coding: utf-8 -*-
+from selenium import selenium
+import unittest, time, re
+
+class sellen(unittest.TestCase):
+    def setUp(self):
+        self.verificationErrors = []
+        self.selenium = selenium("localhost", 4444, "*chrome", "http://127.0.0.1:5000/")
+        self.selenium.start()
+    
+    def test_sellen(self):
+        sel = self.selenium
+        sel.open("/")
+        sel.type("id=firstname", "Anders")
+        sel.type("id=lastname", "Anderss")
+        sel.type("id=lastname", "Andersson")
+        sel.type("id=gender", "Male")
+        sel.type("id=city", "Linkoping")
+        sel.type("id=country", "Sverige")
+        sel.type("id=signup-pwd", "1234")
+        sel.type("id=signup-pwd2", "1234")
+        sel.click("css=#sign-up > div.form-group > input.btn.btn-default")
+        sel.type("id=signup-email", "anders")
+        sel.click("css=#sign-up > div.form-group > input.btn.btn-default")
+        sel.type("id=signup-email", "anders@mail.com")
+        sel.click("css=#sign-up > div.form-group > input.btn.btn-default")
+        sel.type("id=signup-pwd", "12345")
+        sel.type("id=signup-pwd2", "12345")
+        sel.click("css=#sign-up > div.form-group > input.btn.btn-default")
+        sel.type("id=email", "anders@mail.com")
+        sel.type("id=password", "123456")
+        sel.click("id=login-button")
+        sel.type("id=email", "anders@mail.com")
+        sel.type("id=password", "12345")
+        sel.click("id=login-button")
+        sel.click("css=input.btn.btn-default")
+        sel.type("id=to-my-wall", "My name is Anders!")
+        sel.click("css=input.btn.btn-default")
+        sel.click("link=Browse")
+        sel.click("id=view-user-button")
+        sel.type("id=user-email", "kalle@mail.com")
+        sel.click("id=view-user-button")
+        sel.type("id=to-user-wall", "Hello Kalle!")
+        sel.click("css=#post-their > input.btn.btn-default")
+        sel.click("css=#post-their > input.btn.btn-default")
+        sel.click("link=Account")
+        sel.type("id=old-pwd", "123456")
+        sel.type("id=new-pwd", "123456")
+        sel.type("id=new-pwd2", "123456")
+        sel.click("id=change-pwd-button")
+        sel.type("id=old-pwd", "12345")
+        sel.type("id=new-pwd", "12345")
+        sel.type("id=new-pwd2", "12346")
+        sel.click("id=change-pwd-button")
+        sel.type("id=old-pwd", "12345")
+        sel.type("id=new-pwd", "123456")
+        sel.type("id=new-pwd2", "123456")
+        sel.click("id=change-pwd-button")
+        sel.click("id=sign-out-button")
+        sel.type("id=email", "anders@mail.com")
+        sel.type("id=password", "12345")
+        sel.click("id=login-button")
+        sel.type("id=email", "anders@mail.com")
+        sel.type("id=password", "123456")
+        sel.click("id=login-button")
+    
+    def tearDown(self):
+        self.selenium.stop()
+        self.assertEqual([], self.verificationErrors)
+
+if __name__ == "__main__":
+    unittest.main()

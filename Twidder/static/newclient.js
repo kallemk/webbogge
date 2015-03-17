@@ -3,7 +3,6 @@ displayView = function(currentView){
     //Appends the script to the script-container id in the HTML document
     document.getElementById("script-container").innerHTML = document.getElementById(currentView).innerHTML;
     if(currentView === "profileview"){
-        console.log("Onload profileview");
         //Used to set up the profile info and the message wall
     	showMyInformation();
     	setWallContent();
@@ -14,7 +13,6 @@ displayView = function(currentView){
         //Set display:block to the active tab
         document.getElementById(id).style.display = 'block';
     }else if(currentView === "welcomeview"){
-        console.log("Onload welcomeview");
         localStorage.setItem("activeTab",'home');
     }
 };
@@ -43,45 +41,25 @@ var socketDriver = function(){
         }
     new_uri += "//" + loc.host;
     new_uri += "/sign_in";
-    console.log(new_uri);
     var ws = new WebSocket(new_uri);
     ws.onopen = function(){
-        console.log("11111111111111111");
+        console.log("Connection has opened with url:");
+        console.log(new_uri);
         ws.send(localStorage.getItem('myToken'));
-        console.log(localStorage.getItem('myToken'));
-        console.log("22222222222222222");
     };
     /* Depending on which kinde of data is provided this function handles it differently. */
     ws.onmessage = function (response) {
-        console.log("################");
-        console.log(response);
-        console.log(typeof(response.data), "this is the type")
         parsed = JSON.parse(response.data);
-        console.log(parsed);
         if(parsed.token == getToken()){
             displayUserAlerts("You have been logged in somewhere else.");
             signOut();
         }else if(parsed.type == "live_login"){
-            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!");
-            console.log(parsed.data.total_users);
-            console.log(typeof(parsed.data.total_users), "this is the type")
-            console.log(parsed.data.online_users);
-            console.log(typeof(parsed.data.total_users), "this is the type")
             updateLogin(parseInt(parsed.data.online_users), parseInt(parsed.data.total_users));
         }else if(parsed.type == "live_message"){
-            console.log("??????????????????????????");
-            console.log(parsed.data.total_messages);
-            console.log(parsed.data.user_messages);
-            console.log(parsed.data.top_list);
             updateMessage(parseInt(parsed.data.user_messages), parseInt(parsed.data.total_messages), parsed.data.top_list);
         }else{
-            console.log('Something is wrong')
+            console.log('Something else happened')
         }
-    };
-
-    window.onbeforeunload = function(){
-        console.log("On before unload");
-        ws.close();
     };
 
     ws.onclose = function () {
@@ -107,7 +85,6 @@ var callbackPost = function(method, url, requestHeader, requestHeaderValue, para
     };
 };
 
-
 /* The function is used to sign up a user with the given data in the form.
  If the data is written in a faulty way signupValidation woll be false and the user won't be signed up.*/
 var signUp = function(){
@@ -121,7 +98,6 @@ var signUp = function(){
     var email = form[5].value;
     var password = form[6].value;
     var password2 = form[7].value;
-
 
     if (signupValidation(firstname, familyname, gender, city, country, email, password, password2)){
         var formData = "firstname=" + firstname + "&familyname=" + familyname + "&gender=" + gender + "&city=" +city + "&country=" + country + "&email=" + email + "&password=" + password;
@@ -137,7 +113,6 @@ var signUp = function(){
         });
     }
 };
-
 
 /* The function is used to sign the user with the given email and password.
 The socket connection is initiated */
@@ -162,7 +137,6 @@ function signIn(){
         }
     });
 }
-
 
 /* The function signs out the user according to the token in local storage */
 function signOut(){
@@ -236,7 +210,7 @@ var signupValidation = function(firstname, familyname, gender, city, country, em
     }else{
 	    return true;
 	}
-}
+};
 
 
 /*This function sets all tabs to display:none*/
@@ -369,7 +343,6 @@ function getMyPost(){
 }
 
 
-
 /*The function sets up the content of the logged in users wall*/
 function setWallContent(){
 	$("#message-wall textarea").empty();
@@ -493,14 +466,12 @@ Chart.js is used to create the charts, please see http://www.chartjs.org/ */
 
 /* The function sends the correct parameters to chartLoginLoad */
 function updateLogin(logged_in, total){
-    console.log("Starting uptdateLogin");
     chartLoginLoad(logged_in, total);
 }
 
 
 /* The function sends the correct parameters to chartMessageLoad and chartTopLoad */
 function updateMessage(user_messages, total_messages, top_list){
-    console.log("Starting updateMessage");
     chartMessageLoad(user_messages, total_messages);
     chartTopLoad(top_list);
 }
@@ -508,10 +479,8 @@ function updateMessage(user_messages, total_messages, top_list){
 
 /* Function that handles the input parameters and uses them to load the data for the loggedin/total users chart */
 function chartLoginLoad(logged_in, total){
-    console.log("Loading login chart");
 
     var logged_out = total - logged_in;
-    console.log(logged_out);
 
     var doughnutData = [
     {
@@ -530,15 +499,12 @@ function chartLoginLoad(logged_in, total){
 
     var ctx = document.getElementById("login-chart-area").getContext("2d");
 	window.myDoughnut = new Chart(ctx).Doughnut(doughnutData, {responsive : true});
-	console.log("chart should be loaded")
-};
+}
 
 
 /* Function that handles the input parameters
 and uses them to load the data for the users messages/total messages chart */
 function chartMessageLoad(user_messages, total_messages){
-    console.log("Loading message chart");
-
     var other_messages = total_messages - user_messages;
 
     var doughnutData = [
@@ -558,23 +524,19 @@ function chartMessageLoad(user_messages, total_messages){
 
     var ctx = document.getElementById("message-chart-area").getContext("2d");
     window.Doughnut = new Chart(ctx).Doughnut(doughnutData, {responsive : true});
-};
+}
 
 
 /* Function that handles the input parameters
 and uses them to load the data for the top posting users chart */
 function chartTopLoad(top_list){
-    console.log("Loading top list chart");
 
-    console.log(top_list[0]['email']);
     var labels_temp = []
     var data_temp = []
     for (i in top_list){
         labels_temp.push(top_list[i]['email'])
         data_temp.push(parseInt(top_list[i]['messages']))
     }
-    console.log(labels_temp);
-    console.log(data_temp);
 
 	var barChartData = {
 		labels : labels_temp,
@@ -588,7 +550,7 @@ function chartTopLoad(top_list){
 			}
 		]
 
-	}
+	};
 
     var ctx = document.getElementById("top-chart-area").getContext("2d");
     window.myBar = new Chart(ctx).Bar(barChartData, {
